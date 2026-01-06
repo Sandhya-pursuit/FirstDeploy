@@ -1,0 +1,54 @@
+name: DEV | Deploy Bicep (Resource Group)
+
+on:
+  push:
+    branches:
+      - dev
+    
+
+  workflow_dispatch:
+
+env:
+  AZURE_LOCATION: eastus
+  RESOURCE_GROUP: rg-myapp-dev
+
+
+jobs:
+  deploy-dev:
+    name: Deploy DEV Infrastructure
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }} 
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          enable-AzPSSession: true
+
+      - name: Validate Bicep
+        run: |
+          az deployment group validate \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --template-file templates/bicep/main.bicep \
+            --parameters templates/bicep/parameters/main.dev.bicepparam
+
+      - name: What-If (Preview Changes)
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --template-file templates/bicep/main.bicep \
+            --parameters templates/bicep/parameters/main.dev.bicepparam
+
+      - name: Deploy Bicep to DEV
+        run: |
+          az deployment group create \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --template-file templates/bicep/main.bicep \
+            --parameters templates/bicep/parameters/main.dev.bicepparam \
+            --mode Incremental
