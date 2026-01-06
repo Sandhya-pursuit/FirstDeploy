@@ -24,7 +24,7 @@ module appServicePlanModule 'modules/plan.bicep' = {
   }
 }
 
-module logAnalyticsModule 'modules/logAnalytics.bicep' = {
+module logAnalyticsModule 'modules/loganalytics.bicep' = {
   name: 'logAnalyticsModule'
   params: { 
     workspaceName: logAnalyticsName
@@ -53,7 +53,7 @@ module functionAppModule 'modules/func-app.bicep' = {
   }
 }
 
-module keyVaultModule 'modules/keyVault.bicep' = {
+module keyVaultModule 'modules/keyvault.bicep' = {
   name: 'keyVaultModule'
   params: {
     vaultName: keyVaultName
