@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - dev
+    paths-ignore: 
+      - '.github/workflows/deployDotnetCodeToFA.yml'  
+      - 'code/**'
   workflow_dispatch:
 
 # 🔴 REQUIRED FOR OIDC
