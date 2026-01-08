@@ -16,7 +16,7 @@ param appInsightsKey string
 @description('App Insights Connection String')
 param appInsightsConnectionString string
 
-resource functionApp 'Microsoft.Web/sites@2020-12-01' = {
+resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   name: funcAppName
   location: location
   kind: 'functionapp'
@@ -26,32 +26,32 @@ resource functionApp 'Microsoft.Web/sites@2020-12-01' = {
   properties: {
     serverFarmId: serverFarmId
     httpsOnly: true
-    keyVaultReferenceIdentity: 'SystemAssigned'
     siteConfig: {
+      netFrameworkVersion: 'v8.0'   // ✅ .NET 8 runtime
       appSettings: [
-        { 
+        {
           name: 'AzureWebJobsStorage'
           value: storageAccountConnectionString
-         }
-        {
-           name: 'FUNCTIONS_EXTENSION_VERSION'
-            value: '~4' 
         }
         {
-           name: 'FUNCTIONS_WORKER_RUNTIME'
-            value: 'dotnet'
+          name: 'FUNCTIONS_EXTENSION_VERSION'
+          value: '~4'               // ✅ Azure Functions v4
         }
-        { 
+        {
+          name: 'FUNCTIONS_WORKER_RUNTIME'
+          value: 'dotnet-isolated'  // ✅ REQUIRED for .NET 8
+        }
+        {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: appInsightsKey 
+          value: appInsightsKey
         }
         {
-           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-           value: appInsightsConnectionString 
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: appInsightsConnectionString
         }
-        { 
+        {
           name: 'WEBSITE_RUN_FROM_PACKAGE'
-           value: '1'
+          value: '1'
         }
       ]
     }
