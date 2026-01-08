@@ -6,6 +6,7 @@ on:
       - dev
     paths: 
       - 'templates/bicep/**'
+      - '.github/workflows/deploy-bicep-pipeline.yml'
   workflow_dispatch:
 
 

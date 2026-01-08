@@ -6,6 +6,7 @@ on:
       - dev
     paths: 
       - 'code/**'  
+      - '.github/workflows/deployDotnetCodeToFA.yml'
   workflow_dispatch:
 
 env:
