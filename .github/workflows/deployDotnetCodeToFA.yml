@@ -5,14 +5,14 @@ on:
     branches:
       - dev
     paths: 
-      - '.github/workflows/deploy-bicep-pipeline.yml'
-      - 'templates/bicep/**'  
+      - 'code/**'  
   workflow_dispatch:
 
 env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-deploy
   DOTNET_VERSION: '8.0.x'
   PACKAGE_PATH: './code'
+  FUNCTION_PROJECT: code/Http_trigger_function/Http_trigger_function.csproj
 
 jobs:
   build-and-deploy:
@@ -31,7 +31,7 @@ jobs:
       - name: Build & Publish Function App
         shell: pwsh
         run: |
-          dotnet publish `
+          dotnet publish ${{ env.FUNCTION_PROJECT }} `
             --configuration Release `
             --output ${{ env.PACKAGE_PATH }} `
             --runtime win-x64

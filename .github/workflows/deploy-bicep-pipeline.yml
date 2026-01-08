@@ -5,8 +5,7 @@ on:
     branches:
       - dev
     paths: 
-      - '.github/workflows/deployDotnetCodeToFA.yml'  
-      - 'code/**'
+      - 'templates/bicep/**'
   workflow_dispatch:
 
 
