@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - dev
-    paths-ignore: 
+    paths: 
       - '.github/workflows/deployDotnetCodeToFA.yml'  
       - 'code/**'
   workflow_dispatch:
 
-# 🔴 REQUIRED FOR OIDC
+
 permissions:
   id-token: write
   contents: read

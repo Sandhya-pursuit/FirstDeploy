@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - dev
-    paths-ignore: 
+    paths: 
       - '.github/workflows/deploy-bicep-pipeline.yml'
-      - 'templates/**'  
+      - 'templates/bicep/**'  
   workflow_dispatch:
 
 env:
@@ -31,9 +31,9 @@ jobs:
       - name: Build & Publish Function App
         shell: pwsh
         run: |
-          dotnet publish \
-            --configuration Release \
-            --output ${{ env.PACKAGE_PATH }} \
+          dotnet publish `
+            --configuration Release `
+            --output ${{ env.PACKAGE_PATH }} `
             --runtime win-x64
 
       - name: Azure Login (OIDC)

@@ -27,7 +27,7 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
     serverFarmId: serverFarmId
     httpsOnly: true
     siteConfig: {
-      netFrameworkVersion: 'v8.0'   // ✅ .NET 8 runtime
+      netFrameworkVersion: 'v8.0'   // .NET 8 runtime
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
@@ -35,11 +35,11 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~4'               // ✅ Azure Functions v4
+          value: '~4'               //  Azure Functions v4
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: 'dotnet-isolated'  // ✅ REQUIRED for .NET 8
+          value: 'dotnet-isolated'  //  REQUIRED for .NET 8
         }
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
