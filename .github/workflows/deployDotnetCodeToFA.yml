@@ -4,16 +4,16 @@ on:
   push:
     branches:
       - dev
-    paths: 
-      - 'code/**'  
-      - '.github/workflows/deployDotnetCodeToFA.yml'
+    paths-ignore:  
+      - 'templates/**'  
+      - '.github/workflows/deploy-bicep-pipeline.yml'
   workflow_dispatch:
 
 env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-deploy
   DOTNET_VERSION: '8.0.x'
   PACKAGE_PATH: './code'
-  FUNCTION_PROJECT: code/Http_trigger_function/Http_trigger_function.csproj
+  FUNCTION_PROJECT: code/Http_trigger_function/Http_trigger_function/Http_trigger_function.csproj
 
 jobs:
   build-and-deploy:

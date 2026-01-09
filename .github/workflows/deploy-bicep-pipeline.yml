@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - dev
-    paths: 
-      - 'templates/bicep/**'
-      - '.github/workflows/deploy-bicep-pipeline.yml'
+    paths-ignore:  
+      - 'code/**'
+      - '.github/workflows/deployDotnetCodeToFA.yml'
   workflow_dispatch:
 
 
