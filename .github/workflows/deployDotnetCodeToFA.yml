@@ -9,6 +9,10 @@ on:
       - '.github/workflows/deploy-bicep-pipeline.yml'
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-deploy
   DOTNET_VERSION: '8.0.x'
@@ -43,6 +47,7 @@ jobs:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
 
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
