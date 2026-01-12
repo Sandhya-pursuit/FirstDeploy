@@ -46,6 +46,7 @@ jobs:
         with:
           name: functionapp-artifact
           path: ${{ env.PUBLISH_DIR }}
+          include-hidden-files: true
 
 # ---------------- DEPLOY JOB ----------------
   deploy:
