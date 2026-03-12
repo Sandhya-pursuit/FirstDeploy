@@ -1,4 +1,4 @@
-using './main.bicep'
+using '../main.bicep'
 
 param storageName = 'stacprojctautodilab'
 param appServicePlanName = 'appplan-ps-autodilab'
