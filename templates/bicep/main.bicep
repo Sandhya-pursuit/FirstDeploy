@@ -7,6 +7,21 @@ param appInsightsName string
 param keyVaultName string
 param vnetName string
 
+param eventHubNamespaceName string
+
+param sharedAccessPolicyName string
+param EHNskuTier string 
+param EHNskuCapacity int 
+
+param PlanSkuName string  
+param PlanSkuTier string  
+param PlanCapacity int
+
+
+param eventHubName string
+
+
+
 
 module storageModule 'modules/storageaccount.bicep' = {
   name: 'storageModule'
@@ -21,6 +36,9 @@ module appServicePlanModule 'modules/plan.bicep' = {
   params: {
     appServicePlanName: appServicePlanName
     location: location
+    PlanSkuName: PlanSkuName
+    PlanSkuTier: PlanSkuTier
+    PlanCapacity: PlanCapacity
   }
 }
 
@@ -41,15 +59,23 @@ module appInsightsModule 'modules/app-ins.bicep' = {
   }
 }
 
-module functionAppModule 'modules/func-app.bicep' = {
-  name: 'functionAppModule'
+module functionapp 'modules/func-app.bicep' = {
+  name: 'functionappModule'
   params: {
-    funcAppName: funcAppName
+    funcappname: funcAppName
     location: location
-    serverFarmId: appServicePlanModule.outputs.appServicePlanId
-    storageAccountConnectionString: storageModule.outputs.storageAccountConnectionString
-    appInsightsKey: appInsightsModule.outputs.appInsightsInstrumentationKey
-    appInsightsConnectionString: appInsightsModule.outputs.appInsightsConnectionString
+    serverfarmid: appServicePlanModule.outputs.appServicePlanId
+  }
+}
+
+module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
+  name: 'functionAppConfigModule'
+  params: {
+    funcappname: funcAppName
+    serverfarmid: appServicePlanModule.outputs.appServicePlanId
+    instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
+    storageaccountconnString: storageModule.outputs.storageAccountConnectionString
+    eventhubSecretUri: eventHubModule.outputs.eventHubConnectionString
   }
 }
 
@@ -58,15 +84,9 @@ module keyVaultModule 'modules/keyvault.bicep' = {
   params: {
     vaultName: keyVaultName
     location: location
-    accessPolicies: [
-      { 
-        objectId: functionAppModule.outputs.functionAppPrincipalId
-        permissions: { 
-          secrets: ['Get', 'List']
-          keys: ['Get', 'List']
-        }
-      }
-    ]
+    eventHubConnectionString: eventHubModule.outputs.eventHubConnectionString
+    eventHubName: eventHubName
+    functionAppPrincipalId: functionapp.outputs.functionIdentity
   }
 }
 
@@ -76,4 +96,19 @@ module vnetModule 'modules/vnet.bicep' = {
     vnetName: vnetName
     location: location
   }
+  
 }
+
+module eventHubModule 'modules/eventNShub.bicep' = {
+  name: 'eventHubModule'
+  params: {
+    eventHubNamespaceName: eventHubNamespaceName
+    eventhubname: eventHubName
+    sharedAccessPolicyName: sharedAccessPolicyName
+    EHNskuTier: EHNskuTier
+    EHNskuCapacity: EHNskuCapacity
+    location: location
+  }
+}
+
+

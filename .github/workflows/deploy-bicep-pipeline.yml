@@ -16,7 +16,7 @@ permissions:
 
 env:
   AZURE_LOCATION: eastus
-  RESOURCE_GROUP: rg-jma-data-integration-poc
+  RESOURCE_GROUP: rg-dev-autodilab
 
 jobs:
   deploy-dev:

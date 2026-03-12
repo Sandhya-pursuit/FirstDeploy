@@ -1,33 +1,52 @@
-@description('Key Vault Name')
 param vaultName string
+param location string
+param eventHubConnectionString string
+param eventHubName string
+param functionAppPrincipalId string
 
-@description('Location')
-param location string = resourceGroup().location
-
-@description('Array of initial access policies')
-param accessPolicies array = []
-
-resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
+resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaultName
   location: location
   properties: {
-    sku: { 
-          name: 'standard'
-          family: 'A'
-         }
     tenantId: subscription().tenantId
-    accessPolicies: [for p in accessPolicies: {
-      objectId: p.objectId
-      permissions: p.permissions
-      tenantId: subscription().tenantId
-    }]
-    enabledForDeployment: true
-    enabledForDiskEncryption: false
-    enabledForTemplateDeployment: false
-    enableSoftDelete: false
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    accessPolicies: [
+      {
+        objectId: functionAppPrincipalId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'Get'
+            'List'
+          ]
+        }
+      }
+    ]
+    enableSoftDelete: true
+    softDeleteRetentionInDays: 7
     enableRbacAuthorization: false
     publicNetworkAccess: 'Enabled'
   }
 }
 
-output keyVaultId string = keyVault.id
+resource eventhubConnSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: keyvault
+  name: 'secret-eventhub-connstring'
+  properties: {
+    value: eventHubConnectionString
+  }
+}
+
+resource eventhubNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: keyvault
+  name: 'secret-eventhub-name'
+  properties: {
+    value: eventHubName
+  }
+}
+
+output eventhubConnSecretUri string = eventhubConnSecret.properties.secretUriWithVersion
+output eventhubNameSecretUri string = eventhubNameSecret.properties.secretUriWithVersion
