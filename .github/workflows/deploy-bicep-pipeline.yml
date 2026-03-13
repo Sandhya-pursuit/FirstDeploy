@@ -7,7 +7,7 @@ on:
     paths-ignore:  
       - 'code/**'
       - '.github/workflows/deployDotnetCodeToFA.yml'
-  workflow_dispatch:
+  workflow_dispatch: #to run the workflow manually from GitHub UI
 
 
 permissions:
