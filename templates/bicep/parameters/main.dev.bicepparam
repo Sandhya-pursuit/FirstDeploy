@@ -17,3 +17,6 @@ param PlanCapacity = 1
 param eventHubName = 'eh-ps-autodilab'
 
 
+param consumerGroupName = 'ConsumerGoup-autodilab'
+
+param funcAppNameEventlistner = 'Funcapp-ps-eventlistner-autodilab'

@@ -2,7 +2,9 @@ param funcappname string
 param serverfarmid string
 param instrumentkey string
 param storageaccountconnString string
-param eventhubSecretUri string
+param eventHubConnectionString string
+param eventHubName string
+param storageAccountKey string
 
 resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
   name: '${funcappname}/web'
@@ -37,8 +39,16 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
       }
       {
         name: 'secret_eventhub_connstring'
-        value: '@Microsoft.KeyVault(SecretUri=${eventhubSecretUri})'
+        value: '@Microsoft.KeyVault(SecretUri=${eventHubConnectionString})'
       }
+      {
+        name: 'secret_eventhub_name'
+        value: '@Microsoft.KeyVault(SecretUri=${eventHubName})'
+      }
+      {
+        name: 'STORAGE_ACCOUNT_ACCESS_KEY'
+        value: storageAccountKey
+    }
     ]
 
     cors: {

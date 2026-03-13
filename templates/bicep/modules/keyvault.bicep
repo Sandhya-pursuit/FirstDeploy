@@ -48,5 +48,5 @@ resource eventhubNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   }
 }
 
-output eventhubConnSecretUri string = eventhubConnSecret.properties.secretUriWithVersion
-output eventhubNameSecretUri string = eventhubNameSecret.properties.secretUriWithVersion
+output eventHubConnectionString string = eventhubConnSecret.properties.secretUriWithVersion
+output eventHubName string = eventhubNameSecret.properties.secretUriWithVersion

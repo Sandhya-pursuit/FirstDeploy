@@ -4,6 +4,7 @@ param eventhubname string
 param sharedAccessPolicyName string
 param EHNskuTier string 
 param EHNskuCapacity int 
+param consumerGroupName string 
 
 resource eventHubNamespace 'Microsoft.EventHub/namespaces@2023-01-01-preview' = {
   name: eventHubNamespaceName
@@ -35,7 +36,15 @@ resource sharedAccessPolicy 'Microsoft.EventHub/namespaces/eventhubs/authorizati
   }
 }
 
+  //Consumer Group Resource
+resource consumerGroup 'Microsoft.EventHub/namespaces/eventhubs/consumergroups@2023-01-01-preview' = {
+  parent: eventHub
+  name: consumerGroupName
+  properties: {}
+}
+
 var ehconnectionstring = sharedAccessPolicy.listKeys().primaryConnectionString
 
 output eventHubConnectionString string = ehconnectionstring
 output eventHubName string = eventhubname
+

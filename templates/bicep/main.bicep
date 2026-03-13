@@ -19,6 +19,8 @@ param PlanCapacity int
 
 
 param eventHubName string
+param consumerGroupName string 
+param funcAppNameEventlistner string
 
 
 
@@ -75,8 +77,14 @@ module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
     serverfarmid: appServicePlanModule.outputs.appServicePlanId
     instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
     storageaccountconnString: storageModule.outputs.storageAccountConnectionString
-    eventhubSecretUri: eventHubModule.outputs.eventHubConnectionString
+    eventHubConnectionString: eventHubModule.outputs.eventHubConnectionString
+    eventHubName: eventHubModule.outputs.eventHubName
+    storageAccountKey: storageModule.outputs.storageAccountKey
   }
+  dependsOn: [
+    functionapp
+    
+  ]
 }
 
 module keyVaultModule 'modules/keyvault.bicep' = {
@@ -85,7 +93,7 @@ module keyVaultModule 'modules/keyvault.bicep' = {
     vaultName: keyVaultName
     location: location
     eventHubConnectionString: eventHubModule.outputs.eventHubConnectionString
-    eventHubName: eventHubName
+    eventHubName: eventHubModule.outputs.eventHubName
     functionAppPrincipalId: functionapp.outputs.functionIdentity
   }
 }
@@ -108,7 +116,34 @@ module eventHubModule 'modules/eventNShub.bicep' = {
     EHNskuTier: EHNskuTier
     EHNskuCapacity: EHNskuCapacity
     location: location
+    consumerGroupName: consumerGroupName
   }
 }
 
+module functionappeventlistner 'modules/func-app.bicep' = {
+  name: 'functionappeventlistnerModule'
+  params: {
+    funcappname: funcAppNameEventlistner
+    location: location
+    serverfarmid: appServicePlanModule.outputs.appServicePlanId
+  }
+}
+
+module functionAppConfigEventListener 'modules/FunctionAppConfig.bicep' = {
+  name: 'functionAppConfigEventListenerModule'
+
+  params: {
+    funcappname: funcAppNameEventlistner
+    serverfarmid: appServicePlanModule.outputs.appServicePlanId
+    instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
+    storageaccountconnString: storageModule.outputs.storageAccountConnectionString
+    eventHubConnectionString: eventHubModule.outputs.eventHubConnectionString
+    eventHubName: eventHubModule.outputs.eventHubName
+    storageAccountKey: storageModule.outputs.storageAccountKey
+  }
+
+  dependsOn: [
+    functionappeventlistner
+  ]
+}
 
