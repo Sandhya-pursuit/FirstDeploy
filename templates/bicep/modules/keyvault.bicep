@@ -5,6 +5,8 @@ param eventHubName string
 param functionAppPrincipalId string
 param functionAppListenerPrincipalId string
 param cosmosConnectionString string
+param myUserObjectId string
+
 
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaultName
@@ -16,6 +18,18 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
       name: 'standard'
     }
     accessPolicies: [
+      {
+        objectId: myUserObjectId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'Get'
+            'List'
+            'Set'
+            'Delete'
+          ]
+        }
+      }
       {
         objectId: functionAppPrincipalId
         tenantId: subscription().tenantId

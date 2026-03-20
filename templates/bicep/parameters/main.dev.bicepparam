@@ -34,3 +34,4 @@ param functionAppAdditionalSettings = [
 
 
 param cosmosDbAccountName = 'cosmosdb-ps-autodilab'
+param myUserObjectId = '77c5b611-eedd-4ba6-ad1f-3fe14fdffea3'
