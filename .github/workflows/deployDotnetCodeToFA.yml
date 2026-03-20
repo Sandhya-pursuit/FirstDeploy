@@ -36,8 +36,10 @@ jobs:
 
       - name: Publish Function App
         shell: pwsh
+        # We tell the runner to enter the project folder BEFORE running dotnet publish
+        working-directory: ${{ env.FUNCTION_PROJECT }}
         run: |
-          dotnet publish 'code/update_testcase' -c Release -o publish
+          dotnet publish -c Release -o ../../${{ env.PUBLISH_DIR }}
 
       - name: Upload Function App Artifact
         uses: actions/upload-artifact@v4
