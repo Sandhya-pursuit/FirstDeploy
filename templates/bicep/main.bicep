@@ -118,9 +118,9 @@ module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
     serverfarmid: appServicePlanModule.outputs.appServicePlanId
     instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
     storageaccountconnString: storageModule.outputs.storageAccountConnectionString
-    eventHubConnectionString: eventHubModule.outputs.eventHubConnectionString
-    eventHubName: eventHubModule.outputs.eventHubName
+    
     storageAccountKey: storageModule.outputs.storageAccountKey
+    keyVaultName: keyVaultName
 
     additionalAppSettings: functionAppAdditionalSettings
    
@@ -157,31 +157,29 @@ module functionappeventlistner 'modules/func-app.bicep' = {
 
 module functionAppConfigEventListener 'modules/FunctionAppConfig.bicep' = {
   name: 'functionAppConfigEventListenerModule'
-
   params: {
     funcappname: funcAppNameEventlistner
     serverfarmid: appServicePlanModule.outputs.appServicePlanId
     instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
     storageaccountconnString: storageModule.outputs.storageAccountConnectionString
-    eventHubConnectionString: eventHubModule.outputs.eventHubConnectionString
-    eventHubName: eventHubModule.outputs.eventHubName
+    
     storageAccountKey: storageModule.outputs.storageAccountKey
+    keyVaultName: keyVaultName
 
     additionalAppSettings: concat(
-  functionAppListenerAdditionalSettings,
-  [
-    {
-      name: 'secret_cosmosdb_connstring'
-      value: '@Microsoft.KeyVault(SecretUri=${keyVaultModule.outputs.cosmosConnectionString})'
-    }
-  ]
-)
+      functionAppListenerAdditionalSettings,
+      [
+        {
+          name: 'secret_cosmosdb_connstring'
+          // Use the 'keyVaultName' parameter from the top of your main file
+          value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=secret-cosmosdb-connstring)'
+        }
+        
+      ]
+    )
   }
-
   dependsOn: [
-    
-  
-    
+    keyVaultModule
   ]
 }
 

@@ -2,10 +2,9 @@ param funcappname string
 param serverfarmid string
 param instrumentkey string
 param storageaccountconnString string
-param eventHubConnectionString string
-param eventHubName string
-param storageAccountKey string
 
+param storageAccountKey string
+param keyVaultName string
 param additionalAppSettings array = []
 
 resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
@@ -41,11 +40,11 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
       }
       {
         name: 'secret_eventhub_connstring'
-        value: concat('@Microsoft.KeyVault(SecretUri=', eventHubConnectionString,')')
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=secret-eventhub-connstring)'
       }
       {
         name: 'secret_eventhub_name'
-        value: concat('@Microsoft.KeyVault(SecretUri=',eventHubName,')')
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=secret-eventhub-name)'
       }
       {
         name: 'STORAGE_ACCOUNT_ACCESS_KEY'
