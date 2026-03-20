@@ -16,7 +16,7 @@ permissions:
 env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-deploy
   DOTNET_VERSION: '8.0.x'
-  FUNCTION_PROJECT: code/update_testcase
+  FUNCTION_PROJECT: code/update_testcase/update_testcase.csproj
   PUBLISH_DIR: publish
 
 jobs:
