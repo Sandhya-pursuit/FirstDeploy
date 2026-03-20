@@ -20,7 +20,7 @@ env:
   PUBLISH_DIR: publish
 
 jobs:
-# ---------------- BUILD JOB ------------------
+# Build
   build:
     name: Build & Publish Function App
     runs-on: windows-latest
