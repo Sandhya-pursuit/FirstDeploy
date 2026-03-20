@@ -6,13 +6,15 @@ param eventHubConnectionString string
 param eventHubName string
 param storageAccountKey string
 
+param additionalAppSettings array = []
+
 resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
   name: '${funcappname}/web'
 
   properties: {
     serverFarmId: serverfarmid
 
-    appSettings: [
+    appSettings: concat([
       {
         name: 'AzureWebJobsStorage'
         value: storageaccountconnString
@@ -48,8 +50,9 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
       {
         name: 'STORAGE_ACCOUNT_ACCESS_KEY'
         value: storageAccountKey
-    }
-    ]
+      }
+      
+    ] , additionalAppSettings)
 
     cors: {
       allowedOrigins: [

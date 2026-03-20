@@ -3,6 +3,8 @@ param location string
 param eventHubConnectionString string
 param eventHubName string
 param functionAppPrincipalId string
+param functionAppListenerPrincipalId string
+param cosmosConnectionString string
 
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaultName
@@ -24,6 +26,17 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
           ]
         }
       }
+      {
+        objectId: functionAppListenerPrincipalId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'Get'
+            'List'
+          ]
+        }
+      }
+      
     ]
     enableSoftDelete: true
     softDeleteRetentionInDays: 7
@@ -48,5 +61,14 @@ resource eventhubNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   }
 }
 
+resource cosmosConnSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: keyvault
+  name: 'secret-cosmosdb-connstring'
+  properties: {
+    value: cosmosConnectionString
+  }
+}
+
 output eventHubConnectionString string = eventhubConnSecret.properties.secretUriWithVersion
 output eventHubName string = eventhubNameSecret.properties.secretUriWithVersion
+output cosmosConnectionString string = cosmosConnSecret.properties.secretUriWithVersion

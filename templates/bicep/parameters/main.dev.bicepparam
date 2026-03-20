@@ -20,3 +20,17 @@ param eventHubName = 'eh-ps-autodilab'
 param consumerGroupName = 'ConsumerGoup-autodilab'
 
 param funcAppNameEventlistner = 'Funcapp-ps-eventlistner-autodilab'
+
+param functionAppAdditionalSettings = [
+  {
+    name: 'qTestBaseURL'
+    value: 'https://jmfamily.qtestnet.com/api/v3'
+  }
+  {
+    name: 'qTestToken'
+    value: 'df5cbfc9-bfa3-4852-a238-5287cad1c9c8'
+  }
+]
+
+
+param cosmosDbAccountName = 'cosmosdb-ps-autodilab'
