@@ -37,9 +37,7 @@ jobs:
       - name: Publish Function App
         shell: pwsh
         run: |
-          dotnet publish ${{ env.FUNCTION_PROJECT }} `
-            -c Release `
-            -o ${{ env.PUBLISH_DIR }}
+          dotnet publish ${{ env.FUNCTION_PROJECT }} -c Release -o ${{ env.PUBLISH_DIR }}
 
       - name: Upload Function App Artifact
         uses: actions/upload-artifact@v4
