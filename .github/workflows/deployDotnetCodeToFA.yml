@@ -40,7 +40,8 @@ jobs:
         run: dir code\update_testcase
 
       - name: Publish Function App
-        run: dotnet publish "${{ github.workspace }}\code\update_testcase\update_testcase.csproj" -c Release -o "${{ github.workspace }}\publish"
+        # This finds the project file anywhere in your 'code' folder automatically
+        run: dotnet publish code/**/*.csproj -c Release -o ./publish
 
 
       - name: Upload Function App Artifact
