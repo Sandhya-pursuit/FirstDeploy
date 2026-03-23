@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - dev
-    paths:
-      - 'code/**'
-      - '.github/workflows/deployDotnetCodeToFA.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,68 +13,53 @@ permissions:
 env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-deploy
   DOTNET_VERSION: '8.0.x'
-  FUNCTION_PROJECT: 'code/update_testcase/update_testcase.csproj'
-  PUBLISH_DIR: publish
-  WORKING_DIRECTORY: 'code/update_testcase'
-  PROJECT_FILE: 'update_testcase.csproj'
+  # Simplified path for the command
+  PROJECT_PATH: 'code/update_testcase/update_testcase.csproj'
 
 jobs:
-# Build
-    build:
-    name: Build & Publish Function App
+  build:
+    name: Build & Publish
     runs-on: windows-latest
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Find all files (Debug)
-        # This will list EVERYTHING in the runner so we can see the real path
-        run: Get-ChildItem -Recurse
-
-      - name: Find Project File (Debug)
-        # This will specifically look for any .csproj file
-        run: Get-ChildItem -Filter *.csproj -Recurse | Select-Object -ExpandProperty FullName
-
-      - name: Setup .NET 8
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Publish Function App
-        # We will use the direct relative path without wildcards since we're in Windows
-        run: dotnet publish code\update_testcase\update_testcase.csproj -c Release -o ./publish
+      - name: Publish
+        # Using forward slashes is standard for the dotnet CLI even on Windows
+        run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -o ./publish
 
-      - name: Upload Function App Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: functionapp-artifact
           path: ./publish
 
-
-# ---------------- DEPLOY JOB ----------------
   deploy:
-    name: Deploy to Azure Function App
+    name: Deploy to Azure
     runs-on: windows-latest
     needs: build
     environment: dev
-
     steps:
-      - name: Download Function App Artifact
+      - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           name: functionapp-artifact
-          path: publish
+          path: ./publish
 
-      - name: Azure Login (OIDC)
+      - name: Azure Login
         uses: azure/login@v2
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy to Azure Function App
+      - name: Deploy
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-          package: publish
+          package: ./publish
