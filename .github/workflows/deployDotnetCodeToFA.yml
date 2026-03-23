@@ -23,34 +23,37 @@ env:
 
 jobs:
 # Build
-  build:
+    build:
     name: Build & Publish Function App
     runs-on: windows-latest
     
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Find all files (Debug)
+        # This will list EVERYTHING in the runner so we can see the real path
+        run: Get-ChildItem -Recurse
+
+      - name: Find Project File (Debug)
+        # This will specifically look for any .csproj file
+        run: Get-ChildItem -Filter *.csproj -Recurse | Select-Object -ExpandProperty FullName
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: List files for debugging
-        run: dir code\update_testcase
 
       - name: Publish Function App
-        # This searches the ENTIRE repository for any .csproj file
-        run: dotnet publish **/*.csproj -c Release -o ./publish
-
+        # We will use the direct relative path without wildcards since we're in Windows
+        run: dotnet publish code\update_testcase\update_testcase.csproj -c Release -o ./publish
 
       - name: Upload Function App Artifact
         uses: actions/upload-artifact@v4
         with:
           name: functionapp-artifact
-          # Use the same path used in the publish -o flag
-          path: "${{ github.workspace }}/publish"
-          include-hidden-files: true
+          path: ./publish
+
 
 # ---------------- DEPLOY JOB ----------------
   deploy:
