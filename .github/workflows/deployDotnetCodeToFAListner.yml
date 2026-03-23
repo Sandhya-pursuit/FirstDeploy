@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - dev
+      
     paths:
-      - 'code/**'
-      - '.github/workflows/deployDotnetCodeToFA.yml'
-      
-      
+      - 'listnerCode/**'
+      - '.github/workflows/deployDotnetCodeToFAListner.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,10 +15,10 @@ permissions:
   contents: read
 
 env:
-  AZURE_FUNCTIONAPP_NAME: funcapp-ps-autodilab
+  AZURE_FUNCTIONAPP_NAME: Funcapp-ps-eventlistner-autodilab
   DOTNET_VERSION: '10.0.x'
   # Simplified path for the command
-  PROJECT_PATH: 'code/update_testcase/update_testcase.csproj'
+  PROJECT_PATH: 'listnerCode/event_listner/event_listner.csproj'
 
 jobs:
   build:
