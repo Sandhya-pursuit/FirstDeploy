@@ -27,6 +27,8 @@ param functionAppListenerAdditionalSettings array = []
 
 param cosmosDbAccountName string
 param myUserObjectId string
+param userSObjectId string
+param userTObjectId string
 
 
 
@@ -108,8 +110,9 @@ module keyVaultModule 'modules/keyvault.bicep' = {
     functionAppListenerPrincipalId: functionappeventlistner.outputs.functionIdentity
     cosmosConnectionString: cosmosDbAccount.outputs.cosmosdbconnstring
     myUserObjectId: myUserObjectId
+    userSObjectId: userSObjectId
+    userTObjectId: userTObjectId
 
-    
   }
   
 }

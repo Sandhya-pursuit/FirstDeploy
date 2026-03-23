@@ -6,6 +6,8 @@ param functionAppPrincipalId string
 param functionAppListenerPrincipalId string
 param cosmosConnectionString string
 param myUserObjectId string
+param userSObjectId string
+param userTObjectId string
 
 
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
@@ -27,6 +29,26 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
             'List'
             'Set'
             'Delete'
+          ]
+        }
+      }
+      {
+        objectId: userSObjectId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'Get'
+            'List'
+          ]
+        }
+      }
+      {
+        objectId: userTObjectId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'Get'
+            'List'
           ]
         }
       }
