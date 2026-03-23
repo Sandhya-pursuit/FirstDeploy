@@ -40,8 +40,8 @@ jobs:
         run: dir code\update_testcase
 
       - name: Publish Function App
-        # This finds the project file anywhere in your 'code' folder automatically
-        run: dotnet publish code/**/*.csproj -c Release -o ./publish
+        # This searches the ENTIRE repository for any .csproj file
+        run: dotnet publish **/*.csproj -c Release -o ./publish
 
 
       - name: Upload Function App Artifact
