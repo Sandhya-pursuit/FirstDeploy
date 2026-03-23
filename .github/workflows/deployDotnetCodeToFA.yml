@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 env:
-  AZURE_FUNCTIONAPP_NAME: funcapp-ps-deploy
+  AZURE_FUNCTIONAPP_NAME: funcapp-ps-autodilab
   DOTNET_VERSION: '8.0.x'
   # Simplified path for the command
   PROJECT_PATH: 'code/update_testcase/update_testcase.csproj'
