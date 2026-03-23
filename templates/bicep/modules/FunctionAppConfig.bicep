@@ -32,7 +32,7 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
       }
       {
         name: 'FUNCTIONS_WORKER_RUNTIME'
-        value: 'dotnet'
+        value: 'dotnet-isolated'
       }
       {
         name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
