@@ -13,6 +13,7 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
   properties: {
     serverFarmId: serverfarmid
     netFrameworkVersion: 'v10.0'
+    use32BitWorkerProcess: false
     appSettings: concat([
       {
         name: 'AzureWebJobsStorage'
