@@ -54,7 +54,7 @@ public class eventhub_listner
                     continue;
                 }
 
-                Console.WriteLine($"Received event for TestCaseID: {data.testcasepid}, Title: {data.title}, Status: {data.status}");
+                Console.WriteLine(data);
                 //Store the data into cosmos DB
                 await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.testcasepid));
             }
