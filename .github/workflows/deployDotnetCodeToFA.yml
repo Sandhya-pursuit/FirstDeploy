@@ -18,12 +18,15 @@ env:
   DOTNET_VERSION: '8.0.x'
   FUNCTION_PROJECT: 'code/update_testcase/update_testcase.csproj'
   PUBLISH_DIR: publish
+  WORKING_DIRECTORY: 'code/update_testcase'
+  PROJECT_FILE: 'update_testcase.csproj'
 
 jobs:
 # Build
   build:
     name: Build & Publish Function App
     runs-on: windows-latest
+    
 
     steps:
       - name: Checkout code
@@ -35,11 +38,9 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish Function App
-        shell: pwsh
-        # We tell the runner to enter the project folder BEFORE running dotnet publish
-        working-directory: ${{ env.FUNCTION_PROJECT }}
-        run: |
-          dotnet publish -c Release -o ../../${{ env.PUBLISH_DIR }}
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: dotnet publish ${{ env.PROJECT_FILE }} -c Release -o ../../publish    
+
 
       - name: Upload Function App Artifact
         uses: actions/upload-artifact@v4
