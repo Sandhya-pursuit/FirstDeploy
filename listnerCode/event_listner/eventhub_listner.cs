@@ -25,7 +25,7 @@ public class eventhub_listner
     }
 
     [Function(nameof(eventhub_listner))]
-    public async Task Run([EventHubTrigger("secret_eventhub_name", Connection = "secret_eventhub_connstring")] EventData[] events)
+    public async Task Run([EventHubTrigger("%secret_eventhub_name%", Connection = "secret_eventhub_connstring")] EventData[] events)
     {
         //Getting the container detais of that cosmos DB
         var cosmosContainer = _cosmosClient.GetContainer("db-dummy-qtest", "ct-testcases");
@@ -56,7 +56,7 @@ public class eventhub_listner
 
                 Console.WriteLine(data);
                 //Store the data into cosmos DB
-                await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.testcasepid));
+                await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.Pid));
             }
 
             //To catch JSON related issues
