@@ -38,8 +38,8 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish Function App
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: dotnet publish ${{ env.PROJECT_FILE }} -c Release -o ../../publish    
+        
+        run: dotnet publish ${{ env.FUNCTION_PROJECT }} -c Release -o ${{ env.PUBLISH_DIR }}
 
 
       - name: Upload Function App Artifact
