@@ -8,7 +8,7 @@ namespace update_testcase.Models
 {
     public class testcase
     {
-        public int? Id { get; set; }
+        public string? Id { get; set; }
         public string? Name { get; set; }
         public string? Pid { get; set; }
         public string? CreatedDate { get; set; }

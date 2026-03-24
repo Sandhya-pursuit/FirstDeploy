@@ -86,7 +86,7 @@ public class update_testcase
             //filter out the required fields whihc i want to send into event hub
             var filteredPayload = new testcase
             {
-                Id = result?["id"]?.GetValue<int>(),
+                Id = result?["id"]?.ToString(),
                 Name = result?["name"]?.ToString(),
                 Pid = result?["pid"]?.ToString(),
                 CreatedDate = result?["created_date"]?.ToString(),
