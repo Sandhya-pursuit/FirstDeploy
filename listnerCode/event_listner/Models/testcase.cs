@@ -5,18 +5,18 @@ using System.Text.Json.Serialization;
 
 namespace event_listner.Models
 {
-    public class testcase
+    public class testCase
     {
         //This id specificly required for the cosmod db
-        public string id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         //testcase pid
         [JsonPropertyName("pid")]
-        public string? testcasepid { get; set; } 
+        public string? testcasePid { get; set; } 
 
         //testcase id
         [JsonPropertyName("id")]
-        public string? testcaseid { get; set; }
+        public string? testcaseId { get; set; }
 
         //testcase name
         [JsonPropertyName("name")]
@@ -36,6 +36,6 @@ namespace event_listner.Models
 
         //testcase modified date
         [JsonPropertyName("last_modified_date")]
-        public string? testcaseModifieddate { get; set; }
+        public string? testcaseModifiedDate { get; set; }
     }
 }

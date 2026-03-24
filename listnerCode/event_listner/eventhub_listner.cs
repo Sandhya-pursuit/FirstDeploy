@@ -45,7 +45,7 @@ public class eventhub_listner
             try
             {
                 //Convert (Deserialize) the string into your C# object
-                testcase? data = JsonSerializer.Deserialize<testcase>(messageBody);
+                testCase? data = JsonSerializer.Deserialize<testCase>(messageBody);
 
                 //Check if the data is ull or it has actual data
                 if( data == null)
@@ -54,9 +54,9 @@ public class eventhub_listner
                     continue;
                 }
 
-                Console.WriteLine($"Data Id : {data.Id}, Testcase Id : {data.TestCaseId}, Testcase Pid : {data.TestCasePid}, Testcase Description : {data.TestCaseDescription}");
+                Console.WriteLine($"Data Id : {data.Id}, Testcase Id : {data.testcaseId}, Testcase Pid : {data.testcasePid}, Testcase Description : {data.testcaseDescription}");
                 //Store the data into cosmos DB
-                await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.testcasepid));
+                await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.testcasePid));
             }
 
             //To catch JSON related issues
