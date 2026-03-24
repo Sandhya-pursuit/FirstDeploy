@@ -8,11 +8,11 @@ namespace event_listner.Models
     public class testCase
     {
         //This id specificly required for the cosmod db
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string id { get; set; } = Guid.NewGuid().ToString();
 
         //testcase pid
         [JsonPropertyName("pid")]
-        public string? testcasePid { get; set; } 
+        public string? pid { get; set; } 
 
         //testcase id
         [JsonPropertyName("id")]

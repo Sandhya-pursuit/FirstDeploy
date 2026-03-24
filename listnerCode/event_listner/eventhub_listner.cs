@@ -54,9 +54,9 @@ public class eventhub_listner
                     continue;
                 }
 
-                Console.WriteLine($"Data Id : {data.Id}, Testcase Id : {data.testcaseId}, Testcase Pid : {data.testcasePid}, Testcase Description : {data.testcaseDescription}");
+                Console.WriteLine($"Data Id : {data.id}, Testcase Id : {data.testcaseId}, Testcase Pid : {data.pid}, Testcase Description : {data.testcaseDescription}");
                 //Store the data into cosmos DB
-                await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.testcasePid));
+                await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.pid));
             }
 
             //To catch JSON related issues
