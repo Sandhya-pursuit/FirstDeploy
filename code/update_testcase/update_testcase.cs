@@ -84,15 +84,15 @@ public class update_testcase
             var result = await UpdateTestCaseAsync(client, projectId, testCaseId, testCaseJson, cancellationToken);
 
             //filter out the required fields whihc i want to send into event hub
-            var filteredPayload = new testcase
+            var filteredPayload = new TestCase
             {
-                Id = result?["id"]?.ToString(),
-                Name = result?["name"]?.ToString(),
-                Pid = result?["pid"]?.ToString(),
-                CreatedDate = result?["created_date"]?.ToString(),
-                LastModifiedDate = result?["last_modified_date"]?.ToString(),
-                Description = result?["description"]?.ToString(),
-                Precondition = result?["precondition"]?.ToString()
+                tc_id = result?["id"]?.ToString(),
+                tc_name = result?["name"]?.ToString(),
+                tc_pid = result?["pid"]?.ToString(),
+                tc_created_date = result?["created_date"]?.ToString(),
+                tc_last_modified_date = result?["last_modified_date"]?.ToString(),
+                tc_description = result?["description"]?.ToString(),
+                tc_precondition = result?["precondition"]?.ToString()
             };
 
             //Convert it inot JSONStringfy

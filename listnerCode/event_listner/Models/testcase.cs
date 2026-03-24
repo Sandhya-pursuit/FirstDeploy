@@ -5,37 +5,37 @@ using System.Text.Json.Serialization;
 
 namespace event_listner.Models
 {
-    public class testCase
+    public class TestCase
     {
         //This id specificly required for the cosmod db
         public string id { get; set; } = Guid.NewGuid().ToString();
 
         //testcase pid
-        [JsonPropertyName("pid")]
+        [JsonPropertyName("tc-pid")]
         public string? pid { get; set; } 
 
         //testcase id
-        [JsonPropertyName("id")]
-        public string? testcaseId { get; set; }
+        [JsonPropertyName("tc_id")]
+        public string? tc_id { get; set; }
 
         //testcase name
-        [JsonPropertyName("name")]
-        public string? testcaseName { get; set; } 
+        [JsonPropertyName("tc_name")]
+        public string? tc_name { get; set; } 
 
         //testcase description
-        [JsonPropertyName("description")]
-        public string? testcaseDescription { get; set; } 
+        [JsonPropertyName("tc_description")]
+        public string? tc_description { get; set; } 
 
         //testcase precondition
-        [JsonPropertyName("precondition")]
-        public string? testcasePrecondition { get; set; } 
+        [JsonPropertyName("tc_precondition")]
+        public string? tc_precondition { get; set; } 
 
         //testcase created date
-        [JsonPropertyName("created_date")]
-        public string? testcaseCreatedDate { get; set; } 
+        [JsonPropertyName("tc_created_date")]
+        public string? tc_created_date { get; set; } 
 
         //testcase modified date
-        [JsonPropertyName("last_modified_date")]
-        public string? testcaseModifiedDate { get; set; }
+        [JsonPropertyName("tc_last_modified_date")]
+        public string? tc_last_modified_date { get; set; }
     }
 }
