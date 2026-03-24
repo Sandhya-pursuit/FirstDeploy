@@ -12,30 +12,30 @@ namespace event_listner.Models
 
         //testcase pid
         [JsonPropertyName("pid")]
-        public string testcasepid { get; set; } = string.Empty;
+        public string? testcasepid { get; set; } 
 
         //testcase id
         [JsonPropertyName("id")]
-        public int testcaseid { get; set; }
+        public string? testcaseid { get; set; }
 
         //testcase name
         [JsonPropertyName("name")]
-        public string testcaseName { get; set; } = string.Empty;
+        public string? testcaseName { get; set; } 
 
         //testcase description
         [JsonPropertyName("description")]
-        public string testcaseDescription { get; set; } = string.Empty;
+        public string? testcaseDescription { get; set; } 
 
         //testcase precondition
         [JsonPropertyName("precondition")]
-        public string testcasePrecondition { get; set; } = string.Empty;
+        public string? testcasePrecondition { get; set; } 
 
         //testcase created date
         [JsonPropertyName("created_date")]
-        public string testcaseCreatedDate { get; set; } = string.Empty;
+        public string? testcaseCreatedDate { get; set; } 
 
         //testcase modified date
         [JsonPropertyName("last_modified_date")]
-        public string testcaseModifieddate { get; set; } = string.Empty;
+        public string? testcaseModifieddate { get; set; }
     }
 }
