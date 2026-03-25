@@ -2,14 +2,16 @@ param funcappname string
 param serverfarmid string
 param instrumentkey string
 param storageaccountconnString string
-
+@secure()
 param storageAccountKey string
 param keyVaultName string
+param eventHubFullyQualifiedNamespace string
+param eventHubName string
+param cosmosEndpoint string
 param additionalAppSettings array = []
 
 resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
   name: '${funcappname}/web'
-
   properties: {
     serverFarmId: serverfarmid
     netFrameworkVersion: 'v10.0'
@@ -40,19 +42,30 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
         value: instrumentkey
       }
       {
-        name: 'secret_eventhub_connstring'
-        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=secret-eventhub-connstring)'
+        name: 'EventHubFullyQualifiedNamespace'
+        value: eventHubFullyQualifiedNamespace
       }
       {
-        name: 'secret_eventhub_name'
-        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=secret-eventhub-name)'
+        name: 'EventHubName'
+        value: eventHubName
+      }
+      {
+        name: 'CosmosEndpoint'
+        value: cosmosEndpoint
+      }
+      {
+        name: 'qTestBaseURL'
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qtest-baseurl)'
+      }
+      {
+        name: 'qTestToken'
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qtest-token)'
       }
       {
         name: 'STORAGE_ACCOUNT_ACCESS_KEY'
         value: storageAccountKey
       }
-      
-    ] , additionalAppSettings)
+    ], additionalAppSettings)
 
     cors: {
       allowedOrigins: [

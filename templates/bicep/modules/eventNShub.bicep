@@ -1,10 +1,11 @@
 param location string
 param eventHubNamespaceName string
 param eventhubname string
-param sharedAccessPolicyName string
-param EHNskuTier string 
-param EHNskuCapacity int 
-param consumerGroupName string 
+param EHNskuTier string
+param EHNskuCapacity int
+param consumerGroupName string
+param functionAppPrincipalId string
+param functionAppListenerPrincipalId string
 
 resource eventHubNamespace 'Microsoft.EventHub/namespaces@2023-01-01-preview' = {
   name: eventHubNamespaceName
@@ -24,27 +25,36 @@ resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2023-01-01-preview' =
   }
 }
 
-resource sharedAccessPolicy 'Microsoft.EventHub/namespaces/eventhubs/authorizationRules@2023-01-01-preview' = {
-  parent: eventHub
-  name: sharedAccessPolicyName
-  properties: {
-    rights: [
-      'Listen'
-      'Send'
-      'Manage'
-    ]
-  }
-}
-
-  //Consumer Group Resource
 resource consumerGroup 'Microsoft.EventHub/namespaces/eventhubs/consumergroups@2023-01-01-preview' = {
   parent: eventHub
   name: consumerGroupName
   properties: {}
 }
 
-var ehconnectionstring = sharedAccessPolicy.listKeys().primaryConnectionString
+resource eventHubRoleMain 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(eventHubNamespace.id, functionAppPrincipalId, 'eventhub-role-main')
+  scope: eventHubNamespace
+  properties: {
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '2b629674-e913-4c01-ae53-ef4638d8f975'
+    )
+    principalId: functionAppPrincipalId
+  }
+}
 
-output eventHubConnectionString string = ehconnectionstring
-output eventHubName string = eventhubname
+resource eventHubRoleListener 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(eventHubNamespace.id, functionAppListenerPrincipalId, 'eventhub-role-listener')
+  scope: eventHubNamespace
+  properties: {
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '2b629674-e913-4c01-ae53-ef4638d8f975'
+    )
+    principalId: functionAppListenerPrincipalId
+  }
+}
 
+output eventHubFullyQualifiedNamespace string = '${eventHubNamespace.name}.servicebus.windows.net'
+output eventHubName string = eventHub.name
+output consumerGroupName string = consumerGroup.name

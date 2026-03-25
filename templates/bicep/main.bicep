@@ -8,18 +8,15 @@ param keyVaultName string
 param vnetName string
 
 param eventHubNamespaceName string
+param EHNskuTier string
+param EHNskuCapacity int
 
-param sharedAccessPolicyName string
-param EHNskuTier string 
-param EHNskuCapacity int 
-
-param PlanSkuName string  
-param PlanSkuTier string  
+param PlanSkuName string
+param PlanSkuTier string
 param PlanCapacity int
 
-
 param eventHubName string
-param consumerGroupName string 
+param consumerGroupName string
 param funcAppNameEventlistner string
 
 param functionAppAdditionalSettings array = []
@@ -32,14 +29,11 @@ param userTObjectId string
 
 
 
-
-
-
 module storageModule 'modules/storageaccount.bicep' = {
   name: 'storageModule'
-  params: { 
-    storageAccountName: storageName 
-    location: location 
+  params: {
+    storageAccountName: storageName
+    location: location
   }
 }
 
@@ -56,10 +50,10 @@ module appServicePlanModule 'modules/plan.bicep' = {
 
 module logAnalyticsModule 'modules/loganalytics.bicep' = {
   name: 'logAnalyticsModule'
-  params: { 
+  params: {
     workspaceName: logAnalyticsName
-     location: location 
-    }
+    location: location
+  }
 }
 
 module appInsightsModule 'modules/app-ins.bicep' = {
@@ -80,78 +74,6 @@ module functionapp 'modules/func-app.bicep' = {
   }
 }
 
-module eventHubModule 'modules/eventNShub.bicep' = {
-  name: 'eventHubModule'
-  params: {
-    eventHubNamespaceName: eventHubNamespaceName
-    eventhubname: eventHubName
-    sharedAccessPolicyName: sharedAccessPolicyName
-    EHNskuTier: EHNskuTier
-    EHNskuCapacity: EHNskuCapacity
-    location: location
-    consumerGroupName: consumerGroupName
-  }
-}
-module cosmosDbAccount 'modules/cosmosdbaccnt.bicep' = {
-  name: 'cosmosDbAccountModule'
-  params: {
-    cosmosDbAccountName: cosmosDbAccountName
-    location: location
-  }
-}
-module keyVaultModule 'modules/keyvault.bicep' = {
-  name: 'keyVaultModule'
-  params: {
-    vaultName: keyVaultName
-    location: location
-    eventHubConnectionString: eventHubModule.outputs.eventHubConnectionString
-    eventHubName: eventHubModule.outputs.eventHubName
-    functionAppPrincipalId: functionapp.outputs.functionIdentity
-    functionAppListenerPrincipalId: functionappeventlistner.outputs.functionIdentity
-    cosmosConnectionString: cosmosDbAccount.outputs.cosmosdbconnstring
-    myUserObjectId: myUserObjectId
-    userSObjectId: userSObjectId
-    userTObjectId: userTObjectId
-
-  }
-  
-}
-
-module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
-  name: 'functionAppConfigModule'
-  params: {
-    funcappname: funcAppName
-    serverfarmid: appServicePlanModule.outputs.appServicePlanId
-    instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
-    storageaccountconnString: storageModule.outputs.storageAccountConnectionString
-    
-    storageAccountKey: storageModule.outputs.storageAccountKey
-    keyVaultName: keyVaultName
-
-    additionalAppSettings: functionAppAdditionalSettings
-   
-
-  }
-  dependsOn: [
-    functionapp
-    keyVaultModule
-    
-  ]
-}
-
-
-
-module vnetModule 'modules/vnet.bicep' = {
-  name: 'vnetModule'
-  params: { 
-    vnetName: vnetName
-    location: location
-  }
-  
-}
-
-
-
 module functionappeventlistner 'modules/func-app.bicep' = {
   name: 'functionappeventlistnerModule'
   params: {
@@ -161,33 +83,89 @@ module functionappeventlistner 'modules/func-app.bicep' = {
   }
 }
 
-module functionAppConfigEventListener 'modules/FunctionAppConfig.bicep' = {
-  name: 'functionAppConfigEventListenerModule'
+module eventHubModule 'modules/eventNShub.bicep' = {
+  name: 'eventHubModule'
   params: {
-    funcappname: funcAppNameEventlistner
+    eventHubNamespaceName: eventHubNamespaceName
+    eventhubname: eventHubName
+    EHNskuTier: EHNskuTier
+    EHNskuCapacity: EHNskuCapacity
+    location: location
+    consumerGroupName: consumerGroupName
+    functionAppPrincipalId: functionapp.outputs.functionIdentity
+    functionAppListenerPrincipalId: functionappeventlistner.outputs.functionIdentity
+  }
+}
+
+module cosmosDbAccount 'modules/cosmosdbaccnt.bicep' = {
+  name: 'cosmosDbAccountModule'
+  params: {
+    cosmosDbAccountName: cosmosDbAccountName
+    location: location
+    functionAppPrincipalId: functionapp.outputs.functionIdentity
+    functionAppListenerPrincipalId: functionappeventlistner.outputs.functionIdentity
+  }
+}
+
+module keyVaultModule 'modules/keyvault.bicep' = {
+  name: 'keyVaultModule'
+  params: {
+    vaultName: keyVaultName
+    location: location
+    functionAppPrincipalId: functionapp.outputs.functionIdentity
+    functionAppListenerPrincipalId: functionappeventlistner.outputs.functionIdentity
+    myUserObjectId: myUserObjectId
+    userSObjectId: userSObjectId
+    userTObjectId: userTObjectId
+    
+    
+  }
+}
+
+module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
+  name: 'functionAppConfigModule'
+  params: {
+    funcappname: functionapp.outputs.functionAppName
     serverfarmid: appServicePlanModule.outputs.appServicePlanId
     instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
     storageaccountconnString: storageModule.outputs.storageAccountConnectionString
-    
     storageAccountKey: storageModule.outputs.storageAccountKey
     keyVaultName: keyVaultName
-
-    additionalAppSettings: concat(
-      functionAppListenerAdditionalSettings,
-      [
-        {
-          name: 'secret_cosmosdb_connstring'
-          // Use the 'keyVaultName' parameter from the top of your main file
-          value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=secret-cosmosdb-connstring)'
-        }
-        
-      ]
-    )
+    eventHubFullyQualifiedNamespace: eventHubModule.outputs.eventHubFullyQualifiedNamespace
+    eventHubName: eventHubModule.outputs.eventHubName
+    cosmosEndpoint: cosmosDbAccount.outputs.cosmosEndpoint
+    additionalAppSettings: functionAppAdditionalSettings
   }
   dependsOn: [
+    
     keyVaultModule
   ]
 }
 
+module vnetModule 'modules/vnet.bicep' = {
+  name: 'vnetModule'
+  params: {
+    vnetName: vnetName
+    location: location
+  }
+}
 
-
+module functionAppConfigEventListener 'modules/FunctionAppConfig.bicep' = {
+  name: 'functionAppConfigEventListenerModule'
+  params: {
+    funcappname: functionappeventlistner.outputs.functionAppName
+    serverfarmid: appServicePlanModule.outputs.appServicePlanId
+    instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
+    storageaccountconnString: storageModule.outputs.storageAccountConnectionString
+    storageAccountKey: storageModule.outputs.storageAccountKey
+    keyVaultName: keyVaultName
+    eventHubFullyQualifiedNamespace: eventHubModule.outputs.eventHubFullyQualifiedNamespace
+    eventHubName: eventHubModule.outputs.eventHubName
+    cosmosEndpoint: cosmosDbAccount.outputs.cosmosEndpoint
+    additionalAppSettings: functionAppListenerAdditionalSettings
+  }
+  dependsOn: [
+    
+    keyVaultModule
+  ]
+}

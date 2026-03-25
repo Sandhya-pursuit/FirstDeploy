@@ -1,13 +1,11 @@
 param vaultName string
 param location string
-param eventHubConnectionString string
-param eventHubName string
 param functionAppPrincipalId string
 param functionAppListenerPrincipalId string
-param cosmosConnectionString string
 param myUserObjectId string
 param userSObjectId string
 param userTObjectId string
+
 
 
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
@@ -72,7 +70,6 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
           ]
         }
       }
-      
     ]
     enableSoftDelete: true
     softDeleteRetentionInDays: 7
@@ -81,30 +78,21 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   }
 }
 
-resource eventhubConnSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
-  name: 'secret-eventhub-connstring'
-  properties: {
-    value: eventHubConnectionString
-  }
-}
+// resource qTestBaseURLSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+//   parent: keyvault
+//   name: 'qtest-baseurl'
+//   properties: {
+//     value: qTestBaseURL
+//   }
+// }
 
-resource eventhubNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
-  name: 'secret-eventhub-name'
-  properties: {
-    value: eventHubName
-  }
-}
+// resource qTestTokenSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+//   parent: keyvault
+//   name: 'qtest-token'
+//   properties: {
+//     value: qTestToken
+//   }
+// }
 
-resource cosmosConnSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
-  name: 'secret-cosmosdb-connstring'
-  properties: {
-    value: cosmosConnectionString
-  }
-}
-
-output eventHubConnectionString string = eventhubConnSecret.properties.secretUriWithVersion
-output eventHubName string = eventhubNameSecret.properties.secretUriWithVersion
-output cosmosConnectionString string = cosmosConnSecret.properties.secretUriWithVersion
+// output qTestBaseURLSecretUri string = qTestBaseURLSecret.properties.secretUriWithVersion
+// output qTestTokenSecretUri string = qTestTokenSecret.properties.secretUriWithVersion
