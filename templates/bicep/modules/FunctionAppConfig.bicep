@@ -53,10 +53,7 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
         name: 'CosmosEndpoint'
         value: cosmosEndpoint
       }
-      {
-        name: 'qTestBaseURL'
-        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qtest-baseurl)'
-      }
+      
       {
         name: 'qTestToken'
         value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qtest-token)'

@@ -26,6 +26,10 @@ param cosmosDbAccountName string
 param myUserObjectId string
 param userSObjectId string
 param userTObjectId string
+param qTestBaseURL string
+
+
+
 
 
 
@@ -134,10 +138,21 @@ module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
     eventHubFullyQualifiedNamespace: eventHubModule.outputs.eventHubFullyQualifiedNamespace
     eventHubName: eventHubModule.outputs.eventHubName
     cosmosEndpoint: cosmosDbAccount.outputs.cosmosEndpoint
-    additionalAppSettings: functionAppAdditionalSettings
+    additionalAppSettings: concat(
+      functionAppAdditionalSettings,
+      [
+        {
+          name: 'qtestBaseUrl'
+          value: qTestBaseURL
+        }
+        {
+          name: 'secret_eventhub_namespace'
+          value: eventHubModule.outputs.eventHubFullyQualifiedNamespace
+        }
+      ]
+    )
   }
   dependsOn: [
-    
     keyVaultModule
   ]
 }

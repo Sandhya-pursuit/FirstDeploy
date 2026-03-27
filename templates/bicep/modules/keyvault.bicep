@@ -8,6 +8,9 @@ param userTObjectId string
 
 
 
+
+
+
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaultName
   location: location
@@ -78,21 +81,9 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   }
 }
 
-// resource qTestBaseURLSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-//   parent: keyvault
-//   name: 'qtest-baseurl'
-//   properties: {
-//     value: qTestBaseURL
-//   }
-// }
 
-// resource qTestTokenSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-//   parent: keyvault
-//   name: 'qtest-token'
-//   properties: {
-//     value: qTestToken
-//   }
-// }
 
-// output qTestBaseURLSecretUri string = qTestBaseURLSecret.properties.secretUriWithVersion
-// output qTestTokenSecretUri string = qTestTokenSecret.properties.secretUriWithVersion
+
+
+
+
