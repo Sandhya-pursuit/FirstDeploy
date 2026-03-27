@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Azure.Messaging.EventHubs.Producer;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
@@ -11,17 +12,8 @@ var builder = FunctionsApplication.CreateBuilder(args);
 builder.ConfigureFunctionsWebApplication();
 
 //Load eventhub configuration from the environemnt variables
-var eventHubConnectionString = Environment.GetEnvironmentVariable("secret_eventhub_connstring");
+var eventHubNamespace = Environment.GetEnvironmentVariable("secret_eventhub_namespace");
 var eventHubName = Environment.GetEnvironmentVariable("secret_eventhub_name");
-
-/*lets create event producer client
- for a non function app program we can build the client like
-var eventHubProducerClient = new EventHubProducerClient(eventHubConnectionString, eventHubName);
-
-But this is a function app and we have to access this inside the function code file (update_testcase.cs)
-So check the builder.Services..AddSingleton(new EventHubProducerClient(eventHubConnectionString, eventHubName))
- */
-
 
 // Define the Retry Policy (The Bodyguard's Rules)
 // "If we get a network error or a 5xx/408 status code..."
@@ -38,9 +30,26 @@ var circuitBreakerPolicy = HttpPolicyExtensions
 
 builder.Services
     .AddMemoryCache()
-    // Inject the EventHubProducerClient as a Singleton so your functions can use it!
-    .AddSingleton(new EventHubProducerClient(eventHubConnectionString, eventHubName))
-    .AddHttpClient("qTestClient", client =>
+    .AddApplicationInsightsTelemetryWorkerService()
+    .ConfigureFunctionsApplicationInsights()
+    /* 
+    Inject the EventHubProducerClient as a Singleton so your functions can use it!
+    NOTE: This uses connection string to authenticate with the eventhub.
+    */
+    //.AddSingleton(new EventHubProducerClient(eventHubConnectionString, eventHubName))
+
+    // This will use managed identity as an authentication process wiht the event hub
+    .AddSingleton(sp =>
+    {
+        var credential = new DefaultAzureCredential();
+
+        return new EventHubProducerClient(
+            eventHubNamespace,
+            eventHubName,
+            credential);
+    })
+
+    .AddHttpClient("qTestGetTestcaseClient", client =>
     {
         //set the timeout duration
         client.Timeout = TimeSpan.FromSeconds(30);
