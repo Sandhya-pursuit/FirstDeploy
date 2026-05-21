@@ -4,15 +4,15 @@ on:
   push:
     branches:
       - dev
-    paths-ignore:  
+    paths-ignore:
       - 'code/**'
       - '.github/workflows/deployDotnetCodeToFA.yml'
       - '.github/workflows/deployDotnetCodeToFAListner.yml'
       - 'listnerCode/**'
       - '.github/workflows/deploy-cosmosbicep-pipeline.yml'
       - '.github/workflows/deploy-bicep-pipeline.yml'
-  workflow_dispatch: #to run the workflow manually from GitHub UI
 
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -21,14 +21,16 @@ permissions:
 env:
   AZURE_LOCATION: eastus
   RESOURCE_GROUP: rg-dev-autodilab
+
   BICEP_FILE: templates/bicep/main.eventhubnseh.bicep
   BICEP_PARAM_FILE: templates/bicep/parameters/main-event.dev.bicepparam
-  FUNCTIONAPP_NAME: funcapp-ps-autodilab
 
+  FUNCTIONAPP_NAME: funcapp-ps-autodilab
+  FUNCTIONAPP_LISTENER_NAME: Funcapp-ps-eventlistner-autodilab
 
 jobs:
   deploy-dev:
-    name: Deploy DEV Infrastructure
+    name: Deploy DEV EventHub Infrastructure
     runs-on: ubuntu-latest
     environment: dev
 
@@ -58,20 +60,36 @@ jobs:
             --template-file ${{ env.BICEP_FILE }} \
             --parameters ${{ env.BICEP_PARAM_FILE }}
 
-      - name: Deploy Bicep to DEV
+      - name: Deploy EventHub Bicep
         id: deployEventhub
+        shell: bash
         run: |
-          az deployment group create \
+          DEPLOY_OUTPUT=$(az deployment group create \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --template-file ${{ env.BICEP_FILE }} \
             --parameters ${{ env.BICEP_PARAM_FILE }} \
-            --mode Incremental
+            --mode Incremental \
+            --query properties.outputs \
+            -o json)
 
-      - name: UpdateFunapp settings
+          echo "eventHubFullyQualifiedNamespace=$(echo $DEPLOY_OUTPUT | jq -r '.eventHubFullyQualifiedNamespace.value')" >> $GITHUB_OUTPUT
+
+          echo "eventHubName=$(echo $DEPLOY_OUTPUT | jq -r '.eventHubName.value')" >> $GITHUB_OUTPUT
+
+      - name: Update Main Function App Settings
         run: |
-          Update-AzFunctionAppSetting \
-            -Name ${{ env.FUNCTIONAPP_NAME }} \
-            -ResourceGroupName ${{ env.RESOURCE_GROUP }} \
-            -AppSetting @{"EventHubFullyQualifiedNamespace" = ${{ steps.deployEventhub.outputs.eventHubFullyQualifiedNamespace }}; 
-            "EventHubName" = ${{ steps.deployEventhub.outputs.eventHubName }}}
-      
+          az functionapp config appsettings set \
+            --name ${{ env.FUNCTIONAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --settings \
+            EventHubFullyQualifiedNamespace="${{ steps.deployEventhub.outputs.eventHubFullyQualifiedNamespace }}" \
+            EventHubName="${{ steps.deployEventhub.outputs.eventHubName }}"
+
+      - name: Update Listener Function App Settings
+        run: |
+          az functionapp config appsettings set \
+            --name ${{ env.FUNCTIONAPP_LISTENER_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --settings \
+            EventHubFullyQualifiedNamespace="${{ steps.deployEventhub.outputs.eventHubFullyQualifiedNamespace }}" \
+            EventHubName="${{ steps.deployEventhub.outputs.eventHubName }}"
