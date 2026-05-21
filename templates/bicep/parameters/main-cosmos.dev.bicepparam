@@ -4,6 +4,6 @@ using '../main.cosmos.bicep'
 param cosmosDbAccountName = 'cosmosdb-ps-autodilab'
 param location = 'eastus'
 
-param functionAppListenerName = ''
+param functionAppListenerName = 'Funcapp-ps-eventlistner-autodilab'
 
-param functionAppName = ''
+param functionAppName = 'funcapp-ps-autodilab'
