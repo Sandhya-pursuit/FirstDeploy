@@ -18,7 +18,7 @@ permissions:
 env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-autodilab
   DOTNET_VERSION: '10.0.x'
-  # Simplified path for the command
+  # Simplified path for the command..
   PROJECT_PATH: 'code/get_testcase/get_testcase.csproj'
 
 jobs:

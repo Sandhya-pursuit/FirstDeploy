@@ -1,15 +1,18 @@
-name: DEV | Deploy main Bicep(function app,kv,LA,SA,AppPlan) 
+name: DEV | Deploy cosmos bicep
 
 on:
-  push:
-    branches:
-      - dev
-    paths-ignore:  
+   push:
+     branches:
+       - dev
+    
+     paths-ignore:
       - 'code/**'
       - '.github/workflows/deployDotnetCodeToFA.yml'
       - '.github/workflows/deployDotnetCodeToFAListner.yml'
       - 'listnerCode/**'
-  workflow_dispatch: #to run the workflow manually from GitHub UI
+      - '.github/workflows/deploy-eventhub-pipeline.yml'
+      - '.github/workflows/deploy-bicep-pipeline.yml'
+   workflow_dispatch: #to run the workflow manually from GitHub UI
 
 
 permissions:
@@ -19,8 +22,9 @@ permissions:
 env:
   AZURE_LOCATION: eastus
   RESOURCE_GROUP: rg-dev-autodilab
-  BICEP_FILE: templates/bicep/main.bicep
-  BICEP_PARAM_FILE: templates/bicep/parameters/main.dev.bicepparam
+  BICEP_FILE: templates/bicep/main.cosmos.bicep
+  BICEP_PARAM_FILE: templates/bicep/parameters/main-cosmos.dev.bicepparam
+  FUNCTIONAPP_NAME: funcapp-ps-autodilab
 
 jobs:
   deploy-dev:
@@ -44,7 +48,7 @@ jobs:
         run: |
           az deployment group validate \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --template-file ${{ env.BICEP_FILE }}\
+            --template-file ${{ env.BICEP_FILE }} \
             --parameters ${{ env.BICEP_PARAM_FILE }}
 
       - name: What-If (Preview Changes)
@@ -55,9 +59,19 @@ jobs:
             --parameters ${{ env.BICEP_PARAM_FILE }}
 
       - name: Deploy Bicep to DEV
+        id: deployCosmos
         run: |
           az deployment group create \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --template-file ${{ env.BICEP_FILE }} \
             --parameters ${{ env.BICEP_PARAM_FILE }} \
             --mode Incremental
+
+      - name: UpdateFunapp settings
+        run: |
+          Update-AzFunctionAppSetting \
+            -Name ${{ env.FUNCTIONAPP_NAME }} \
+            -ResourceGroupName ${{ env.RESOURCE_GROUP }} \
+            -AppSetting @{"CosmosEndpoint" = ${{ steps.deployCosmos.outputs.cosmosDbEndpoint }}}
+          
+    
