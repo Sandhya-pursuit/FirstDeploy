@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Practice_update_testcase": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7138",
+      "launchBrowser": false
+    }
+  }
+}
