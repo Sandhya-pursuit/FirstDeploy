@@ -1,4 +1,4 @@
-name: DEV | Deploy DotNet Function App
+name: DEV | Deploy Event Listner - Cosmos DB DotNet Function App
 
 on:
   push:

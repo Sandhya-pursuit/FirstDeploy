@@ -1,4 +1,4 @@
-name: DEV | Deploy DotNet Function App
+name: DEV | Deploy Update Testcase DotNet Function App
 
 on:
   push:
@@ -19,7 +19,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-autodilab
   DOTNET_VERSION: '10.0.x'
   # Simplified path for the command..
-  PROJECT_PATH: 'code/get_testcase/get_testcase.csproj'
+  PROJECT_PATH: 'Practice_update_testcase\Practice_update_testcase.csproj'
 
 jobs:
   build:
