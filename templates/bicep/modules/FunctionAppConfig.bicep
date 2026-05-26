@@ -5,7 +5,7 @@ param storageaccountconnString string
 @secure()
 param storageAccountKey string
 param keyVaultName string
-param eventHubFullyQualifiedNamespace string
+param eventHubConnectionString string
 param eventHubName string
 param cosmosEndpoint string
 param additionalAppSettings array = []
@@ -42,11 +42,11 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
         value: instrumentkey
       }
       {
-        name: 'EventHubFullyQualifiedNamespace'
-        value: eventHubFullyQualifiedNamespace
+        name: 'eventHubConnectionString'
+        value: eventHubConnectionString
       }
       {
-        name: 'EventHubName'
+        name: 'eventHubName'
         value: eventHubName
       }
       {

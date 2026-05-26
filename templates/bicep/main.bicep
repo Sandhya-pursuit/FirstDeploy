@@ -13,16 +13,19 @@ param PlanCapacity int
 param myUserObjectId string
 param userSObjectId string
 param userTObjectId string
+param userSOObjectId string
 
 
 param funcAppName string
 param funcAppNameEventlistner string
 
+param funAppNameSaheb string // For Saheb - done by Sounak
+
 param qTestBaseURL string
 
 param functionAppAdditionalSettings array = []
 param functionAppListenerAdditionalSettings array = []
-param eventHubFullyQualifiedNamespace string
+param eventHubConnectionString string
 param eventHubName string
 param cosmosEndpoint string
 
@@ -82,11 +85,11 @@ module keyVaultModule 'modules/keyvault.bicep' = {
     location: location
     functionAppPrincipalId: functionapp.outputs.functionIdentity
     functionAppListenerPrincipalId: functionappeventlistner.outputs.functionIdentity
+    functionAppSahebPrincipalId: functionappsaheb.outputs.functionIdentity                          // For Saheb - done by Sounak
     myUserObjectId: myUserObjectId
     userSObjectId: userSObjectId
     userTObjectId: userTObjectId
-    
-    
+    userSOObjectId: userSOObjectId                                                                  // For Saheb - done by Sounak 
   }
 }
 
@@ -119,6 +122,16 @@ module functionappeventlistner 'modules/func-app.bicep' = {
   }
 }
 
+// For Saheb - done by Sounak
+module functionappsaheb 'modules/func-app.bicep' = {
+  name: 'functionappSahebModule'
+  params: {
+    funcappname: funAppNameSaheb
+    location: location
+    serverfarmid: appServicePlanModule.outputs.appServicePlanId
+  }
+}
+
 module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
   name: 'functionAppConfigModule'
   params: {
@@ -128,7 +141,7 @@ module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
     storageaccountconnString: storageModule.outputs.storageAccountConnectionString
     storageAccountKey: storageModule.outputs.storageAccountKey
     keyVaultName: keyVaultName
-    eventHubFullyQualifiedNamespace: eventHubFullyQualifiedNamespace
+    eventHubConnectionString: eventHubConnectionString
     eventHubName: eventHubName
     cosmosEndpoint: cosmosEndpoint
     additionalAppSettings: concat(
@@ -137,10 +150,6 @@ module functionAppConfig 'modules/FunctionAppConfig.bicep' = {
         {
           name: 'qtestBaseUrl'
           value: qTestBaseURL
-        }
-        {
-          name: 'secret_eventhub_namespace'
-          value: eventHubFullyQualifiedNamespace
         }
       ]
     )
@@ -159,10 +168,37 @@ module functionAppConfigEventListener 'modules/FunctionAppConfig.bicep' = {
     storageaccountconnString: storageModule.outputs.storageAccountConnectionString
     storageAccountKey: storageModule.outputs.storageAccountKey
     keyVaultName: keyVaultName
-    eventHubFullyQualifiedNamespace: eventHubFullyQualifiedNamespace
+    eventHubConnectionString: eventHubConnectionString
     eventHubName: eventHubName
     cosmosEndpoint: cosmosEndpoint
     additionalAppSettings: functionAppListenerAdditionalSettings
   }
-  
+}
+
+// For Saheb - done by Sounak
+module functionAppConfigSaheb 'modules/FunctionAppConfig.bicep' = {
+  name: 'functionAppConfigModuleSaheb'
+  params: {
+    funcappname: functionappsaheb.outputs.functionAppName
+    serverfarmid: appServicePlanModule.outputs.appServicePlanId
+    instrumentkey: appInsightsModule.outputs.appInsightsInstrumentationKey
+    storageaccountconnString: storageModule.outputs.storageAccountConnectionString
+    storageAccountKey: storageModule.outputs.storageAccountKey
+    keyVaultName: keyVaultName
+    eventHubConnectionString: eventHubConnectionString
+    eventHubName: eventHubName
+    cosmosEndpoint: cosmosEndpoint
+    additionalAppSettings: concat(
+      functionAppAdditionalSettings,
+      [
+        {
+          name: 'qtestBaseUrl'
+          value: qTestBaseURL
+        }
+      ]
+    )
+  }
+  dependsOn: [
+    keyVaultModule
+  ]
 }
