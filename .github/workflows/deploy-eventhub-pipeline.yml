@@ -1,16 +1,16 @@
 name: DEV | Deploy eventhub
 
 on:
-  push:
-    branches:
-      - dev
-    paths-ignore:
-      - 'code/**'
-      - '.github/workflows/deployDotnetCodeToFA.yml'
-      - '.github/workflows/deployDotnetCodeToFAListner.yml'
-      - 'listnerCode/**'
-      - '.github/workflows/deploy-cosmosbicep-pipeline.yml'
-      - '.github/workflows/deploy-bicep-pipeline.yml'
+  # push:
+  #   branches:
+  #     - dev
+  #   paths-ignore:
+  #     - 'code/**'
+  #     - '.github/workflows/deployDotnetCodeToFA.yml'
+  #     - '.github/workflows/deployDotnetCodeToFAListner.yml'
+  #     - 'listnerCode/**'
+  #     - '.github/workflows/deploy-cosmosbicep-pipeline.yml'
+  #     - '.github/workflows/deploy-bicep-pipeline.yml'
 
   workflow_dispatch:
 

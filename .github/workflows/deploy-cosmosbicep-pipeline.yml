@@ -1,17 +1,17 @@
 name: DEV | Deploy cosmos bicep
 
 on:
-  push:
-    branches:
-      - dev
+  # push:
+  #   branches:
+  #     - dev
 
-    paths-ignore:
-      - 'code/**'
-      - '.github/workflows/deployDotnetCodeToFA.yml'
-      - '.github/workflows/deployDotnetCodeToFAListner.yml'
-      - 'listnerCode/**'
-      - '.github/workflows/deploy-eventhub-pipeline.yml'
-      - '.github/workflows/deploy-bicep-pipeline.yml'
+  #   paths-ignore:
+  #     - 'code/**'
+  #     - '.github/workflows/deployDotnetCodeToFA.yml'
+  #     - '.github/workflows/deployDotnetCodeToFAListner.yml'
+  #     - 'listnerCode/**'
+  #     - '.github/workflows/deploy-eventhub-pipeline.yml'
+  #     - '.github/workflows/deploy-bicep-pipeline.yml'
 
   workflow_dispatch:
 

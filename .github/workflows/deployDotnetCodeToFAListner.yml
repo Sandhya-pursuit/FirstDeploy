@@ -1,13 +1,13 @@
 name: DEV | Deploy Event Listner - Cosmos DB DotNet Function App
 
 on:
-  push:
-    branches:
-      - dev
+  # push:
+  #   branches:
+  #     - dev
       
-    paths:
-      - 'listnerCode/**'
-      - '.github/workflows/deployDotnetCodeToFAListner.yml'
+  #   paths:
+  #     - 'listnerCode/**'
+  #     - '.github/workflows/deployDotnetCodeToFAListner.yml'
   workflow_dispatch:
 
 permissions:

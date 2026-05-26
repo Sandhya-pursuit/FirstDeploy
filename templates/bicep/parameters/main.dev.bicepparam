@@ -13,10 +13,12 @@ param PlanCapacity = 1
 param myUserObjectId = '77c5b611-eedd-4ba6-ad1f-3fe14fdffea3'
 param userSObjectId = '9aa3c688-89a7-49eb-970e-fd0f00ad4015'
 param userTObjectId = '5df4258a-3ea6-4029-97af-8059a829dc17'
+param userSOObjectId = 'de462505-c413-4130-b461-e94d9fc82066'                         // For Saheb - done by Sounak
 
 param funcAppNameEventlistner = 'Funcapp-ps-eventlistner-autodilab'
 param qTestBaseURL = 'https://jmfamily.qtestnet.com/api/v3'
 param funcAppName = 'funcapp-ps-autodilab'
+param funAppNameSaheb = 'funcapp-saheb-practice-ps-autodilab'
 param cosmosEndpoint =  ''
-param eventHubFullyQualifiedNamespace = ''
+param eventHubConnectionString = ''
 param eventHubName =  ''

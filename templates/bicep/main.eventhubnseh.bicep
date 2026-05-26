@@ -32,5 +32,5 @@ module eventHubModule 'modules/eventNShub.bicep' = {
   }
 }
 
-output eventHubFullyQualifiedNamespace string = eventHubModule.outputs.eventHubFullyQualifiedNamespace
+output eventHubConnectionString string = eventHubModule.outputs.eventHubConnectionString
 output eventHubName string = eventHubModule.outputs.eventHubName

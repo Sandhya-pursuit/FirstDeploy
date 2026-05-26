@@ -55,6 +55,6 @@ resource eventHubRoleListener 'Microsoft.Authorization/roleAssignments@2022-04-0
   }
 }
 
-output eventHubFullyQualifiedNamespace string = '${eventHubNamespace.name}.servicebus.windows.net'
+output eventHubConnectionString string = '${eventHubNamespace.name}.servicebus.windows.net'
 output eventHubName string = eventHub.name
 output consumerGroupName string = consumerGroup.name

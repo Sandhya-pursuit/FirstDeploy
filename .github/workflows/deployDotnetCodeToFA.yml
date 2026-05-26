@@ -1,12 +1,12 @@
 name: DEV | Deploy Update Testcase DotNet Function App
 
 on:
-  push:
-    branches:
-      - dev
-    paths:
-      - 'code/**'
-      - '.github/workflows/deployDotnetCodeToFA.yml'
+  # push:
+  #   branches:
+  #     - dev
+  #   paths:
+  #     - 'code/**'
+  #     - '.github/workflows/deployDotnetCodeToFA.yml'
       
       
   workflow_dispatch:
@@ -19,7 +19,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-autodilab
   DOTNET_VERSION: '10.0.x'
   # Simplified path for the command..
-  PROJECT_PATH: 'Practice_update_testcase\Practice_update_testcase.csproj'
+  PROJECT_PATH: 'practice_update_testcase_sounak\Practice_update_testcase.csproj'
 
 jobs:
   build:
