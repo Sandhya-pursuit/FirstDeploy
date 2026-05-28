@@ -1,0 +1,70 @@
+name: DEV | Deploy Event Listner - Cosmos DB DotNet Function App
+
+on:
+  # push:
+  #   branches:
+  #     - dev
+      
+  #   paths:
+  #     - 'listnerCode/**'
+  #     - '.github/workflows/deployDotnetCodeToFAListner.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write     
+  contents: read
+
+env:
+  AZURE_FUNCTIONAPP_NAME: Funcapp-ps-eventlistner-autodilab
+  DOTNET_VERSION: '10.0.x'
+  # Simplified path for the command
+  PROJECT_PATH: 'listnerCode/event_listner/event_listner.csproj'
+
+jobs:
+  build:
+    name: Build & Publish
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish
+        # Using forward slashes is standard for the dotnet CLI even on Windows
+        run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -o ./publish
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: functionapp-artifact
+          path: ./publish
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy to Azure
+    runs-on: windows-latest
+    needs: build
+    environment: dev
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: functionapp-artifact
+          path: ./publish
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ./publish

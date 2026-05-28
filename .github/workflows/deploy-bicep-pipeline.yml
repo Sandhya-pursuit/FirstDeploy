@@ -1,0 +1,63 @@
+name: DEV | Deploy main Bicep(function app,kv,LA,SA,AppPlan) 
+
+on:
+  # push:
+  #   branches:
+  #     - dev
+  #   paths-ignore:  
+  #     - 'code/**'
+  #     - '.github/workflows/deployDotnetCodeToFA.yml'
+  #     - '.github/workflows/deployDotnetCodeToFAListner.yml'
+  #     - 'listnerCode/**'
+  workflow_dispatch: #to run the workflow manually from GitHub UI
+
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_LOCATION: eastus
+  RESOURCE_GROUP: rg-dev-autodilab
+  BICEP_FILE: templates/bicep/main.bicep
+  BICEP_PARAM_FILE: templates/bicep/parameters/main.dev.bicepparam
+
+jobs:
+  deploy-dev:
+    name: Deploy DEV Infrastructure
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+
+      - name: Validate Bicep
+        run: |
+          az deployment group validate \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --template-file ${{ env.BICEP_FILE }}\
+            --parameters ${{ env.BICEP_PARAM_FILE }}
+
+      - name: What-If (Preview Changes)
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --template-file ${{ env.BICEP_FILE }} \
+            --parameters ${{ env.BICEP_PARAM_FILE }}
+
+      - name: Deploy Bicep to DEV
+        run: |
+          az deployment group create \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --template-file ${{ env.BICEP_FILE }} \
+            --parameters ${{ env.BICEP_PARAM_FILE }} \
+            --mode Incremental
