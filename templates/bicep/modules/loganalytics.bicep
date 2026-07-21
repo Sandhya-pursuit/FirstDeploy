@@ -1,10 +1,5 @@
-@description('Log Analytics Workspace name')
 param workspaceName string
-
-@description('Location')
 param location string = resourceGroup().location
-
-@description('Retention in days')
 param retentionInDays int = 30
 
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {

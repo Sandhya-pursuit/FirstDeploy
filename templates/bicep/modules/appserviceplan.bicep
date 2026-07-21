@@ -1,10 +1,5 @@
-@description('Location')
 param location string
-
-@description('App Service Plan name')
 param appserviceplanname string
-
-@description('App Service Plan properties')
 param appserviceplan object
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2025-03-01' = {

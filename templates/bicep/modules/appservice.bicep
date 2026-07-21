@@ -47,15 +47,7 @@ resource appService_webApp 'Microsoft.Web/sites@2024-04-01' = {
       ipSecurityRestrictions: []
       scmIpSecurityRestrictionsDefaultAction: 'Deny'
       scmIpSecurityRestrictionsUseMain: true
-      scmIpSecurityRestrictions: [
-        {
-          ipAddress: 'Any'
-          action: 'Deny'
-          priority: 2147483647
-          name: 'Deny all'
-          description: 'Deny all access'
-        }
-      ]
+      scmIpSecurityRestrictions: []
       cors: {
         allowedOrigins: [
           'https://portal.azure.com'

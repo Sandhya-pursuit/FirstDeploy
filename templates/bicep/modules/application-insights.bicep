@@ -1,10 +1,5 @@
-@description('Application Insights name')
 param appInsightsName string
-
-@description('Location')
 param location string = resourceGroup().location
-
-@description('Log Analytics Workspace Id')
 param logAnalyticsWorkspaceId string
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {

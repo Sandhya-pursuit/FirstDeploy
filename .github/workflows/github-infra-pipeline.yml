@@ -15,6 +15,7 @@ env:
   BICEP_PARAM_FILE: templates/bicep/parameters/main.dev.bicepparam
 
 jobs:
+  
   deploy-dev:
     name: Deploy DEV Infrastructure
     runs-on: ubuntu-latest
@@ -37,19 +38,19 @@ jobs:
           az deployment group validate \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --template-file ${{ env.BICEP_FILE }}\
-            --parameters ${{ env.BICEP_PARAM_FILE }}
+            --parameters ${{ env.BICEP_PARAM_FILE }} qTestTokenSecret=${{ secrets.QTEST_TOKEN }}
 
       - name: What-If (Preview Changes)
         run: |
           az deployment group what-if \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --template-file ${{ env.BICEP_FILE }} \
-            --parameters ${{ env.BICEP_PARAM_FILE }}
+            --parameters ${{ env.BICEP_PARAM_FILE }} qTestTokenSecret=${{ secrets.QTEST_TOKEN }}
 
       - name: Deploy Bicep to DEV
         run: |
           az deployment group create \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --template-file ${{ env.BICEP_FILE }} \
-            --parameters ${{ env.BICEP_PARAM_FILE }} \
+            --parameters ${{ env.BICEP_PARAM_FILE }} qTestTokenSecret=${{ secrets.QTEST_TOKEN }} \
             --mode Incremental

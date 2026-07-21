@@ -1,7 +1,4 @@
-@description('Storage Account name')
 param storageAccountName string
-
-@description('Location')
 param location string = resourceGroup().location
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {

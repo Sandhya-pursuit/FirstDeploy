@@ -56,7 +56,7 @@ resource funcconfig 'Microsoft.Web/sites/config@2023-01-01' = {
       
       {
         name: 'qTestToken'
-        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qTestToken)'
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qTestTokenSecret)'
       }
       {
         name: 'STORAGE_ACCOUNT_ACCESS_KEY'

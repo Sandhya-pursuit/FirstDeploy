@@ -8,6 +8,8 @@ param SounakObjectId string
 param TapasObjectId string
 param SahebObjectId string
 
+@secure()
+param qTestTokenSecret string
 
 
 
@@ -103,9 +105,14 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   }
 }
 
+//Adding Secrets to Key Vault
+resource keyVaultSecret_qTestToken 'Microsoft.KeyVault/vaults/secrets@2024-12-01-preview' = {
+  parent: keyvault
+  name: 'qtesttoken'
+  properties: {
+    value: qTestTokenSecret
+  }
+}
 
 
-
-
-
-
+output qTestTokenSecret string = keyVaultSecret_qTestToken.properties.secretUri

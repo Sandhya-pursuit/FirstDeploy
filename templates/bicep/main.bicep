@@ -13,6 +13,10 @@ param appInsightsName string
 @description('Name of the Key Vault.')
 param keyVaultName string
 
+@secure()
+@description('Secret value for the qTest token.')
+param qTestTokenSecret string
+
 @description('Object ID of the Sandya user.')
 param SandyaObjectId string
 
@@ -136,7 +140,8 @@ module keyvault_Module 'modules/keyvault.bicep' = {
     SandyaObjectId: SandyaObjectId
     SounakObjectId: SounakObjectId
     TapasObjectId: TapasObjectId
-    SahebObjectId: SahebObjectId 
+    SahebObjectId: SahebObjectId
+    qTestTokenSecret: qTestTokenSecret
   }
 }
 

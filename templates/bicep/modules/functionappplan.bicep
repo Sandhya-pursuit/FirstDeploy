@@ -1,10 +1,5 @@
-@description('Location')
 param location string = resourceGroup().location
-
-@description('Functionapp App Plan name')
 param funcAppServicePlanName string
-
-@description('Functionapp App Plan properties')
 param functAppServicePlan object
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-12-01' = {
