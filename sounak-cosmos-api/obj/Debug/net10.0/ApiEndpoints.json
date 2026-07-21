@@ -1,0 +1,40 @@
+[
+  {
+    "ContainingType": "sounak_cosmos_api.Controllers.testCaseController",
+    "Method": "GetAll",
+    "RelativePath": "testCase/test-cases",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Get All Test Cases"
+  },
+  {
+    "ContainingType": "sounak_cosmos_api.Controllers.testCaseController",
+    "Method": "GetById",
+    "RelativePath": "testCase/test-cases/{testcase_pid}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "testcase_pid",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "sounak_cosmos_api.Models.TestCase",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "Get Test Case By pid"
+  }
+]

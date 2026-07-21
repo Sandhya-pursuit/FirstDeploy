@@ -1,0 +1,291 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "sounak-cosmos-api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/testCase/test-cases": {
+      "get": {
+        "tags": [
+          "testCase"
+        ],
+        "operationId": "Get All Test Cases",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/testCase/test-cases/{testcase_pid}": {
+      "get": {
+        "tags": [
+          "testCase"
+        ],
+        "operationId": "Get Test Case By pid",
+        "parameters": [
+          {
+            "name": "testcase_pid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestCase"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestCase"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestCase"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomFiledInfo": {
+        "type": "object",
+        "properties": {
+          "qtest_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "objectid": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "striphtmlvalue": {
+            "type": "string",
+            "nullable": true
+          },
+          "propertyeditorcomponent": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Link": {
+        "type": "object",
+        "properties": {
+          "rel": {
+            "type": "string",
+            "nullable": true
+          },
+          "href": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Property": {
+        "type": "object",
+        "properties": {
+          "fieldid": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fieldname": {
+            "type": "string",
+            "nullable": true
+          },
+          "fieldvalue": {
+            "type": "string",
+            "nullable": true
+          },
+          "fieldvaluename": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TestCase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            },
+            "nullable": true
+          },
+          "qtest_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtest_pid": {
+            "type": "string",
+            "nullable": true
+          },
+          "createddate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastmodifieddate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Property"
+            },
+            "nullable": true
+          },
+          "weburl": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentid": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "testcaseversionid": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "precondition": {
+            "type": "string",
+            "nullable": true
+          },
+          "aigenerated": {
+            "type": "boolean"
+          },
+          "aigeneratedsource": {
+            "type": "string",
+            "nullable": true
+          },
+          "creatorid": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "agentids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "nullable": true
+          },
+          "teststeps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TestStep"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TestStep": {
+        "type": "object",
+        "properties": {
+          "customfieldinfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFiledInfo"
+            },
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            },
+            "nullable": true
+          },
+          "qtest_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "expected": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "attachments": {
+            "type": "array",
+            "items": { },
+            "nullable": true
+          },
+          "group": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "plainvaluetext": {
+            "type": "string",
+            "nullable": true
+          },
+          "calledtestcase": {
+            "$ref": "#/components/schemas/TestCase"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "testCase"
+    }
+  ]
+}
