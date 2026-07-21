@@ -19,6 +19,35 @@ resource vnet 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         name: subnetName
         properties: {
           addressPrefix: '10.0.0.0/24'
+
+          // Service Endpoints
+          serviceEndpoints: [
+            {
+              service: 'Microsoft.KeyVault'
+            }
+            {
+              service: 'Microsoft.AzureCosmosDB'
+            }
+            {
+              service: 'Microsoft.EventHub'
+            }
+            {
+              service: 'Microsoft.Storage'
+            }
+            {
+              service: 'Microsoft.Web'
+            }
+          ]
+
+          // Subnet Delegation
+          delegations: [
+            {
+              name: 'webappDelegation'
+              properties: {
+                serviceName: 'Microsoft.Web/serverFarms'
+              }
+            }
+          ]
         }
       }
     ]
