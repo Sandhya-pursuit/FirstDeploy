@@ -25,13 +25,16 @@ func start
 
 Configuration: update `sounak-cosmos-api/appsettings.json` or set environment variables for Cosmos DB connection; update `sounak_update_testcase/local.settings.json` for function-local settings.
 
-**Deploy infra (Bicep)**
-- Use Azure CLI to deploy templates in `templates/bicep` (example):
+**Deploy infra (GitHub Actions)**
+- The repo uses GitHub Actions workflows in `.github/workflows/` for deployment.
+- Key workflows:
+  - `deploy-bicep-pipeline.yml` — deploys the main Bicep infra.
+  - `deploy-cosmosbicep-pipeline.yml` — deploys Cosmos DB resources and updates Function App settings.
+  - `deploy-eventhub-pipeline.yml` — deploys Event Hub resources and updates Function App settings.
+- All workflows are set up for `workflow_dispatch`, so they can be triggered manually from the GitHub Actions UI.
 
-```powershell
-az deployment group create -g <resource-group> --template-file templates/bicep/main.bicep --parameters @templates/parameters/main.dev.bicepparam
-```
+**Workflow requirements**
+- Repository variables required for OIDC login: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`.
+- Resource group and parameter values are configured in `templates/bicep` and the `.dev.bicepparam` files.
 
 Keep it short: see the code folders for implementation details and tweak parameters before deploying.
-
-If you want, I can expand this README with examples, env vars, or CI/CD steps.
