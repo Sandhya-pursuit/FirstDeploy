@@ -125,14 +125,14 @@ module vnet_Module 'modules/vnet.bicep' = {
 }
 
 // Key vault Module
-module keyVaultModule 'modules/keyvault.bicep' = {
-  name: 'keyVaultModule'
+module keyvault_Module 'modules/keyvault.bicep' = {
+  name: 'keyvault_Module'
   params: {
     vaultName: keyVaultName
     location: location
-    functionAppPrincipalId: functionapp_updatetestcase.outputs.functionIdentity
-    functionAppListenerPrincipalId: functionapp_eventlistner.outputs.functionIdentity
-    functionAppSahebPrincipalId: functionapp_saheb.outputs.functionIdentity
+    functionAppPrincipalId: functionapp_sounak_updatetestcase_module.outputs.functionIdentity
+    functionAppListenerPrincipalId: functionapp_sounak_eventlistner_module.outputs.functionIdentity
+    functionAppSahebPrincipalId: functionapp_saheb_module.outputs.functionIdentity
     SandyaObjectId: SandyaObjectId
     SounakObjectId: SounakObjectId
     TapasObjectId: TapasObjectId
@@ -141,8 +141,8 @@ module keyVaultModule 'modules/keyvault.bicep' = {
 }
 
 // Functionapp Service Plan Module
-module functionappPlan_Module 'modules/functionappplan.bicep' = {
-  name: 'functionappPlan_Module'
+module functionappplan_module 'modules/functionappplan.bicep' = {
+  name: 'functionappplan_module'
   params: {
     funcAppServicePlanName: funcAppServicePlanName
     functAppServicePlan: functAppServicePlan
@@ -151,21 +151,21 @@ module functionappPlan_Module 'modules/functionappplan.bicep' = {
 }
 
 // Sounak Functionapp Update Test Case Module
-module functionapp_updatetestcase 'modules/functionapp.bicep' = {
-  name: 'functionapp_updatetestcase_module'
+module functionapp_sounak_updatetestcase_module 'modules/functionapp.bicep' = {
+  name: 'functionapp_sounak_updatetestcase_module'
   params: {
     funcappname: SounakUpdateTestcaseFuncAppName
     location: location
-    serverfarmid: functionappPlan_Module.outputs.appServicePlanId
+    serverfarmid: functionappplan_module.outputs.appServicePlanId
   }
 }
 
 // Sounak Functionapp Update test Case Config Module
-module functionapp_updatetestcase_config 'modules/functionapp-config.bicep' = {
-  name: 'functionapp_updatetestcase_config_module'
+module functionapp_sounak_updatetestcase_config_module 'modules/functionapp-config.bicep' = {
+  name: 'functionapp_sounak_updatetestcase_config_module'
   params: {
     funcappname: SounakUpdateTestcaseFuncAppName
-    serverfarmid: functionappPlan_Module.outputs.appServicePlanId
+    serverfarmid: functionappplan_module.outputs.appServicePlanId
     instrumentkey: appInsights_Module.outputs.appInsightsInstrumentationKey
     storageaccountconnString: storage_Module.outputs.storageAccountConnectionString
     storageAccountKey: storage_Module.outputs.storageAccountKey
@@ -184,26 +184,26 @@ module functionapp_updatetestcase_config 'modules/functionapp-config.bicep' = {
     )
   }
   dependsOn: [
-    keyVaultModule
+    keyvault_Module
   ]
 }
 
 // Sounak Functionapp Event Listner Module
-module functionapp_eventlistner 'modules/functionapp.bicep' = {
-  name: 'functionapp_eventlistner_module'
+module functionapp_sounak_eventlistner_module 'modules/functionapp.bicep' = {
+  name: 'functionapp_sounak_eventlistner_module'
   params: {
     funcappname: SounakEventListnerFuncAppName
     location: location
-    serverfarmid: functionappPlan_Module.outputs.appServicePlanId
+    serverfarmid: functionappplan_module.outputs.appServicePlanId
   }
 }
 
 // Sounak Functionapp Event Listner Config Module
-module functionAppConfigEventListener 'modules/functionapp-config.bicep' = {
-  name: 'functionAppConfigEventListenerModule'
+module functionapp_sounak_eventlistner_config_module 'modules/functionapp-config.bicep' = {
+  name: 'functionapp_sounak_eventlistner_config_module'
   params: {
     funcappname: SounakEventListnerFuncAppName
-    serverfarmid: functionappPlan_Module.outputs.appServicePlanId
+    serverfarmid: functionappplan_module.outputs.appServicePlanId
     instrumentkey: appInsights_Module.outputs.appInsightsInstrumentationKey
     storageaccountconnString: storage_Module.outputs.storageAccountConnectionString
     storageAccountKey: storage_Module.outputs.storageAccountKey
@@ -216,21 +216,21 @@ module functionAppConfigEventListener 'modules/functionapp-config.bicep' = {
 }
 
 // Saheb Functionapp Practice Module
-module functionapp_saheb 'modules/functionapp.bicep' = {
-  name: 'functionappSahebModule'
+module functionapp_saheb_module 'modules/functionapp.bicep' = {
+  name: 'functionapp_saheb_module'
   params: {
     funcappname: SahebFuncAppName
     location: location
-    serverfarmid: functionappPlan_Module.outputs.appServicePlanId
+    serverfarmid: functionappplan_module.outputs.appServicePlanId
   }
 }
 
 // Saheb Functionapp Config Module
-module functionAppConfigSaheb 'modules/functionapp-config.bicep' = {
-  name: 'functionAppConfigModuleSaheb'
+module functionapp_saheb_config_module 'modules/functionapp-config.bicep' = {
+  name: 'functionapp_saheb_config_module'
   params: {
     funcappname: SahebFuncAppName
-    serverfarmid: functionappPlan_Module.outputs.appServicePlanId
+    serverfarmid: functionappplan_module.outputs.appServicePlanId
     instrumentkey: appInsights_Module.outputs.appInsightsInstrumentationKey
     storageaccountconnString: storage_Module.outputs.storageAccountConnectionString
     storageAccountKey: storage_Module.outputs.storageAccountKey
@@ -249,13 +249,13 @@ module functionAppConfigSaheb 'modules/functionapp-config.bicep' = {
     )
   }
   dependsOn: [
-    keyVaultModule
+    keyvault_Module
   ]
 }
 
 // App Service Plan Module
-module appServicePlan_Module 'modules/appserviceplan.bicep' = {
-  name: 'appServicePlan_Module'
+module appServiceplan_module 'modules/appserviceplan.bicep' = {
+  name: 'appServiceplan_module'
   params: {
     appserviceplanname: appserviceplanname
     appserviceplan: appserviceplan
@@ -270,7 +270,7 @@ module webApp_uatnextv2 'modules/appservice.bicep' = {
     location: location
     webAppName: SounakAppServiceName
     dotnetVersion: dotnetVersion
-    asp_serverFarmID: appServicePlan_Module.outputs.serverfarmID
+    asp_serverFarmID: appServiceplan_module.outputs.serverfarmID
     vnetSubnetID: vnet_Module.outputs.subnetId
     appSettings: [
       {
