@@ -254,7 +254,7 @@ module functionAppConfigSaheb 'modules/functionapp-config.bicep' = {
 }
 
 // App Service Plan Module
-module appServicePlan_Module 'modules/appServiceplan.bicep' = {
+module appServicePlan_Module 'modules/appserviceplan.bicep' = {
   name: 'appServicePlan_Module'
   params: {
     appserviceplanname: appserviceplanname
@@ -265,7 +265,7 @@ module appServicePlan_Module 'modules/appServiceplan.bicep' = {
 
 
 // App Service Cosmos DB API Module
-module webApp_uatnextv2 'modules/appService.bicep' = {
+module webApp_uatnextv2 'modules/appservice.bicep' = {
   params: {
     location: location
     webAppName: SounakAppServiceName
