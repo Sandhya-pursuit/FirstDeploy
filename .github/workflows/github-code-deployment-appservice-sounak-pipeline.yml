@@ -1,0 +1,100 @@
+name: DEV | Deploy App Service - Sounak Code
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+env:
+  WEB_APP_NAME: webapp-ps-dev-sounak-cosmosdb-webapi
+  ARTIFACT_NAME: webApp-package
+  ZIP_NAME: sounak-cosmos-api.zip
+  WEB_APP_DIR: ./sounak-cosmos-api
+  BUILD_CONFIGURATION: Release
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  Build:
+    name: Build Web App
+    runs-on: internal
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Restore NuGet packages
+        working-directory: ${{ env.WEB_APP_DIR }}
+        run: dotnet restore
+
+      - name: Build with .NET
+        working-directory: ${{ env.WEB_APP_DIR }}
+        run: dotnet build --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+      - name: Test with .NET
+        working-directory: ${{ env.WEB_APP_DIR }}
+        run: dotnet test --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --collect:"XPlat Code Coverage"
+
+      - name: Publish project
+        working-directory: ${{ env.WEB_APP_DIR }}
+        run: dotnet publish sounak-cosmos-api.csproj -r linux-x64 --configuration ${{ env.BUILD_CONFIGURATION }} --output ./publish
+
+      - name: Zip web app
+        working-directory: ${{ env.WEB_APP_DIR }}/publish
+        run: zip -r $GITHUB_WORKSPACE/${{ env.ZIP_NAME }} .
+
+      - name: List files
+        run: ls -R
+
+      - name: Upload web app zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./${{ env.ZIP_NAME }}
+
+
+  Deploy-Dev:
+    name: Deploy to Azure Web App (Dev)
+    needs: Build
+    runs-on: internal
+    environment: dev
+
+    steps:
+      - name: Checkout (optional)
+        uses: actions/checkout@v4
+
+      # ================= DOWNLOAD ARTIFACT =================
+      - name: Download Frontend Code Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./
+
+      # ================= LOG PARAMETERS =================
+      - name: Output AzureWebApp parameters
+        run: |
+          echo "Deploying Frontend to Azure Web App"
+          echo "App Name: ${{ env.WEB_APP_NAME }}"
+          echo "Package Path: ./${{ env.ZIP_NAME }}"
+
+      # ================= AZURE LOGIN =================
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      # ================= DEPLOY =================
+      - name: Deploy to Azure Web App (Linux)
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.WEB_APP_NAME }}
+          package: ./${{ env.ZIP_NAME }}

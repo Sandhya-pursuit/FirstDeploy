@@ -1,19 +1,17 @@
-param location string 
+@description('Location')
+param location string
+
+@description('App Service Plan name')
 param appserviceplanname string
-// param asp_sku object
 
-param asp_sku object = {
-  name: 'B1'
-  tier: 'Basic'
-  family: 'B'
-}
-
+@description('App Service Plan properties')
+param appserviceplan object
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2025-03-01' = {
   name: appserviceplanname
   location: location
   kind: 'app'
-  sku: asp_sku
+  sku: appserviceplan
   properties: {
     reserved: true
   }

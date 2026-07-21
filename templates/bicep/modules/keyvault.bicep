@@ -3,10 +3,10 @@ param location string
 param functionAppPrincipalId string
 param functionAppListenerPrincipalId string
 param functionAppSahebPrincipalId string
-param myUserObjectId string
-param userSObjectId string
-param userTObjectId string
-param userSOObjectId string  // For Saheb - done by Sounak
+param SandyaObjectId string
+param SounakObjectId string
+param TapasObjectId string
+param SahebObjectId string
 
 
 
@@ -24,7 +24,7 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
     }
     accessPolicies: [
       {
-        objectId: myUserObjectId
+        objectId: SandyaObjectId
         tenantId: subscription().tenantId
         permissions: {
           secrets: [
@@ -36,7 +36,7 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
         }
       }
       {
-        objectId: userSObjectId
+        objectId: SounakObjectId
         tenantId: subscription().tenantId
         permissions: {
           secrets: [
@@ -46,7 +46,7 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
         }
       }
       {
-        objectId: userTObjectId
+        objectId: TapasObjectId
         tenantId: subscription().tenantId
         permissions: {
           secrets: [
@@ -55,9 +55,8 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
           ]
         }
       }
-      // For Saheb - done by Sounak
       {
-        objectId: userSOObjectId
+        objectId: SahebObjectId
         tenantId: subscription().tenantId
         permissions: {
           secrets: [
@@ -86,7 +85,6 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
           ]
         }
       }
-      // For Saheb - done by Sounak
       {
         objectId: functionAppSahebPrincipalId
         tenantId: subscription().tenantId

@@ -1,7 +1,7 @@
 param location string
 param webAppName string
 param asp_serverFarmID string
-param linuxFxVersion string
+param dotnetVersion string
 param vnetSubnetID string
 param appSettings array
 
@@ -37,9 +37,9 @@ resource appService_webApp 'Microsoft.Web/sites@2024-04-01' = {
       }
     ]
     siteConfig: {
-      linuxFxVersion: linuxFxVersion
+      linuxFxVersion: dotnetVersion
       loadBalancing: 'LeastRequests'
-      alwaysOn: true 
+      alwaysOn: false 
       minTlsVersion: '1.2'
       ftpsState: 'FtpsOnly'
       vnetRouteAllEnabled: true

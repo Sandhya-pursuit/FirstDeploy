@@ -1,15 +1,7 @@
-name: DEV | Deploy main Bicep(function app,kv,LA,SA,AppPlan) 
+name: DEV | Deploy Infrastructure - FA, KV, LA, AI, SA, AS 
 
 on:
-  # push:
-  #   branches:
-  #     - dev
-  #   paths-ignore:  
-  #     - 'code/**'
-  #     - '.github/workflows/deployDotnetCodeToFA.yml'
-  #     - '.github/workflows/deployDotnetCodeToFAListner.yml'
-  #     - 'listnerCode/**'
-  workflow_dispatch: #to run the workflow manually from GitHub UI
+  workflow_dispatch:
 
 
 permissions:

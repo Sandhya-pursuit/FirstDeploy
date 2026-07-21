@@ -18,7 +18,7 @@ resource functionAppListener 'Microsoft.Web/sites@2023-01-01' existing = {
   name: functionAppListenerName
 }
 
-module eventHubModule 'modules/eventNShub.bicep' = {
+module eventHubModule 'modules/eventhub-namespace.bicep' = {
   name: 'eventHubModule'
   params: {
     eventHubNamespaceName: eventHubNamespaceName

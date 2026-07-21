@@ -10,7 +10,7 @@ resource FunctionApp 'Microsoft.Web/sites@2023-01-01' existing = {
 resource functionAppListener 'Microsoft.Web/sites@2023-01-01' existing = {
   name: functionAppListenerName
 }
-module cosmosDbAccount 'modules/cosmosdbaccnt.bicep' = {
+module cosmosDbAccount 'modules/cosmosdbaccount.bicep' = {
   name: 'cosmosDbAccountModule'
   params: {
     cosmosDbAccountName: cosmosDbAccountName

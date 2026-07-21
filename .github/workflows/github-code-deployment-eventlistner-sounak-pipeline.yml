@@ -1,14 +1,6 @@
-name: DEV | Deploy Update Testcase DotNet Function App
+name: DEV | Deploy Event Listner - Sounak Code
 
 on:
-  # push:
-  #   branches:
-  #     - dev
-  #   paths:
-  #     - 'code/**'
-  #     - '.github/workflows/deployDotnetCodeToFA.yml'
-      
-      
   workflow_dispatch:
 
 permissions:
@@ -16,10 +8,10 @@ permissions:
   contents: read
 
 env:
-  AZURE_FUNCTIONAPP_NAME: funcapp-ps-autodilab
+  AZURE_FUNCTIONAPP_NAME: funcapp-ps-dev-sounak-eventlistner
   DOTNET_VERSION: '10.0.x'
-  # Simplified path for the command..
-  PROJECT_PATH: 'practice_update_testcase_sounak\Practice_update_testcase.csproj'
+  # Simplified path for the command
+  PROJECT_PATH: 'listnerCode/event_listner/event_listner.csproj'
 
 jobs:
   build:

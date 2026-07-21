@@ -1,18 +1,6 @@
-name: DEV | Deploy cosmos bicep
+name: DEV | Deploy CosmosDB Infrastructure
 
 on:
-  # push:
-  #   branches:
-  #     - dev
-
-  #   paths-ignore:
-  #     - 'code/**'
-  #     - '.github/workflows/deployDotnetCodeToFA.yml'
-  #     - '.github/workflows/deployDotnetCodeToFAListner.yml'
-  #     - 'listnerCode/**'
-  #     - '.github/workflows/deploy-eventhub-pipeline.yml'
-  #     - '.github/workflows/deploy-bicep-pipeline.yml'
-
   workflow_dispatch:
 
 permissions:
@@ -26,8 +14,8 @@ env:
   BICEP_FILE: templates/bicep/main.cosmos.bicep
   BICEP_PARAM_FILE: templates/bicep/parameters/main-cosmos.dev.bicepparam
 
-  FUNCTIONAPP_NAME: funcapp-ps-autodilab
-  FUNCTIONAPP_LISTENER_NAME: Funcapp-ps-eventlistner-autodilab
+  FUNCTIONAPP_NAME: funcapp-ps-dev-sounak-updatetestcase
+  FUNCTIONAPP_LISTENER_NAME: funcapp-ps-dev-sounak-eventlistner
 
 jobs:
   deploy-dev:

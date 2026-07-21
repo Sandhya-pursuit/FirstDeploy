@@ -1,14 +1,11 @@
-@description('VNet Name')
-param vnetName string
-
 @description('Location')
 param location string = resourceGroup().location
 
-@description('Subnet Name')
-param subnetName string = 'subnet1'
+@description('VNet Name')
+param vnetName string
 
-@description('Subnet Address Prefix')
-param subnetPrefix string = '10.0.0.0/24'
+@description('Subnet Name')
+param subnetName string
 
 resource vnet 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: vnetName
@@ -21,7 +18,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2019-11-01' = {
       {
         name: subnetName
         properties: {
-          addressPrefix: subnetPrefix
+          addressPrefix: '10.0.0.0/24'
         }
       }
     ]
