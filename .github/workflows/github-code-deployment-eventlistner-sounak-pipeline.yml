@@ -11,7 +11,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: funcapp-ps-dev-sounak-eventlistner
   DOTNET_VERSION: '10.0.x'
   # Simplified path for the command
-  PROJECT_PATH: 'listnerCode/event_listner/event_listner.csproj'
+  PROJECT_PATH: 'sounak_eventhub_listner/sounak_eventhub_listner.csproj'
 
 jobs:
   build:
