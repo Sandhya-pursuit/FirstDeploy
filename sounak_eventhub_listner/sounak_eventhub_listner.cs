@@ -20,7 +20,7 @@ public class sounak_eventhub_listner
         _cosmosClient = cosmosClient;
 
         // Cosmos DB Connection string
-        var cosmosConnectionString = Environment.GetEnvironmentVariable("cosmosdb_connstring");
+        var cosmosConnectionString = Environment.GetEnvironmentVariable("CosmosEndpoint");
         //Create new client of cosmos DB
         _cosmosClient = new CosmosClient(cosmosConnectionString);
     }
@@ -29,7 +29,7 @@ public class sounak_eventhub_listner
     public async Task Run([EventHubTrigger("eventHubName", Connection = "eventHubConnectionString")] EventData[] events)
     {
         //Getting the container detais of that cosmos DB
-        var cosmosContainer = _cosmosClient.GetContainer("db-dummy-qtest", "ct-testcases");
+        var cosmosContainer = _cosmosClient.GetContainer("db-qTest", "ct-testcase");
 
         //To avoide case sensetive issues
         var options = new JsonSerializerOptions
