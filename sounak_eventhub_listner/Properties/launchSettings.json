@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "sounak_eventhub_listner": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7147",
+      "launchBrowser": false
+    }
+  }
+}
