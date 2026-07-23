@@ -18,7 +18,7 @@ env:
 jobs:
   Build:
     name: Build Web App
-    runs-on: internal
+    runs-on: windows-latest
 
     steps:
 
@@ -63,7 +63,7 @@ jobs:
   Deploy-Dev:
     name: Deploy to Azure Web App (Dev)
     needs: Build
-    runs-on: internal
+    runs-on: windows-latest
     environment: dev
 
     steps:
