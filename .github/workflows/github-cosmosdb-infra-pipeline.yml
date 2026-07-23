@@ -14,9 +14,6 @@ env:
   BICEP_FILE: templates/bicep/main.cosmos.bicep
   BICEP_PARAM_FILE: templates/bicep/parameters/main-cosmos.dev.bicepparam
 
-  FUNCTIONAPP_NAME: funcapp-ps-dev-sounak-updatetestcase
-  FUNCTIONAPP_LISTENER_NAME: funcapp-ps-dev-sounak-eventlistner
-
 jobs:
   deploy-dev:
     name: Deploy DEV Cosmos Infrastructure
@@ -62,19 +59,3 @@ jobs:
             -o json)
 
           echo "cosmosDbEndpoint=$(echo $DEPLOY_OUTPUT | jq -r '.cosmosEndpoint.value')" >> $GITHUB_OUTPUT
-
-      - name: Update Main Function App Settings
-        run: |
-          az functionapp config appsettings set \
-            --name ${{ env.FUNCTIONAPP_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --settings \
-            CosmosEndpoint="${{ steps.deployCosmos.outputs.cosmosDbEndpoint }}"
-
-      - name: Update Listener Function App Settings
-        run: |
-          az functionapp config appsettings set \
-            --name ${{ env.FUNCTIONAPP_LISTENER_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --settings \
-            CosmosEndpoint="${{ steps.deployCosmos.outputs.cosmosDbEndpoint }}"

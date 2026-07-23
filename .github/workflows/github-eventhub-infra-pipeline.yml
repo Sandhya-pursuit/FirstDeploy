@@ -14,9 +14,6 @@ env:
   BICEP_FILE: templates/bicep/main.eventhubnseh.bicep
   BICEP_PARAM_FILE: templates/bicep/parameters/main-event.dev.bicepparam
 
-  FUNCTIONAPP_NAME: funcapp-ps-autodilab
-  FUNCTIONAPP_LISTENER_NAME: Funcapp-ps-eventlistner-autodilab
-
 jobs:
   deploy-dev:
     name: Deploy DEV EventHub Infrastructure
@@ -64,21 +61,3 @@ jobs:
           echo "eventHubFullyQualifiedNamespace=$(echo $DEPLOY_OUTPUT | jq -r '.eventHubFullyQualifiedNamespace.value')" >> $GITHUB_OUTPUT
 
           echo "eventHubName=$(echo $DEPLOY_OUTPUT | jq -r '.eventHubName.value')" >> $GITHUB_OUTPUT
-
-      - name: Update Main Function App Settings
-        run: |
-          az functionapp config appsettings set \
-            --name ${{ env.FUNCTIONAPP_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --settings \
-            EventHubFullyQualifiedNamespace="${{ steps.deployEventhub.outputs.eventHubFullyQualifiedNamespace }}" \
-            EventHubName="${{ steps.deployEventhub.outputs.eventHubName }}"
-
-      - name: Update Listener Function App Settings
-        run: |
-          az functionapp config appsettings set \
-            --name ${{ env.FUNCTIONAPP_LISTENER_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --settings \
-            EventHubFullyQualifiedNamespace="${{ steps.deployEventhub.outputs.eventHubFullyQualifiedNamespace }}" \
-            EventHubName="${{ steps.deployEventhub.outputs.eventHubName }}"
