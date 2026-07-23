@@ -42,5 +42,10 @@ param dotnetVersion = 'DOTNETCORE|10.0'
 param logOutUrl = 'https://login.microsoftonline.com/b16b5078-3c36-482e-b98e-b986822e8f7f/oauth2/v2.0/logout'
 
 param cosmosEndpoint =  ''
+param cosmosKey =  ''
+param cosmosDatabaseName =  'db-qTest'
+param cosmosContainerName =  'ct-testcase'
+
+
 param eventHubConnectionString = ''
-param eventHubName =  ''
+param eventHubName =  'eh-ps-autodilab'

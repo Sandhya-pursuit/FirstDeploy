@@ -53,12 +53,6 @@ param SahebFuncAppName string
 @description('qTest Base URL.')
 param qTestBaseURL string
 
-@description('Additional app settings for the Sounak Update Test Case Function App.')
-param functionAppAdditionalSettings array = []
-
-@description('Additional app settings for the Sounak Event Listener Function App.')
-param functionAppListenerAdditionalSettings array = []
-
 @description('Event Hub connection string.')
 param eventHubConnectionString string
 
@@ -67,6 +61,15 @@ param eventHubName string
 
 @description('Cosmos DB endpoint.')
 param cosmosEndpoint string
+
+@description('Cosmos DB key.')
+param cosmosKey string
+
+@description('Cosmos DB database name.')
+param cosmosDatabaseName string
+
+@description('Cosmos DB container name.')
+param cosmosContainerName string
 
 @description('Name of the App Service Plan.')
 param appserviceplanname string
@@ -171,22 +174,52 @@ module functionapp_sounak_updatetestcase_config_module 'modules/functionapp-conf
   params: {
     funcappname: SounakUpdateTestcaseFuncAppName
     serverfarmid: functionappplan_module.outputs.appServicePlanId
-    instrumentkey: appInsights_Module.outputs.appInsightsInstrumentationKey
-    storageaccountconnString: storage_Module.outputs.storageAccountConnectionString
-    storageAccountKey: storage_Module.outputs.storageAccountKey
-    keyVaultName: keyVaultName
-    eventHubConnectionString: eventHubConnectionString
-    eventHubName: eventHubName
-    cosmosEndpoint: cosmosEndpoint
-    additionalAppSettings: concat(
-      functionAppAdditionalSettings,
-      [
-        {
-          name: 'qtestBaseUrl'
-          value: qTestBaseURL
-        }
-      ]
-    )
+    appSettings: [
+      {
+        name: 'AzureWebJobsStorage'
+        value: storage_Module.outputs.storageAccountConnectionString
+      }
+      {
+        name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
+        value: storage_Module.outputs.storageAccountConnectionString
+      }
+      {
+        name: 'STORAGE_ACCOUNT_ACCESS_KEY'
+        value: storage_Module.outputs.storageAccountKey
+      }
+      {
+        name: 'WEBSITE_CONTENTSHARE'
+        value: toLower(SounakUpdateTestcaseFuncAppName)
+      }
+      {
+        name: 'FUNCTIONS_EXTENSION_VERSION'
+        value: '~4'
+      }
+      {
+        name: 'FUNCTIONS_WORKER_RUNTIME'
+        value: 'dotnet-isolated'
+      }
+      {
+        name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+        value: appInsights_Module.outputs.appInsightsInstrumentationKey
+      }
+      {
+        name: 'eventHubConnectionString'
+        value: eventHubConnectionString
+      }
+      {
+        name: 'eventHubName'
+        value: eventHubName
+      }
+      {
+        name: 'qTestBaseURL'
+        value: qTestBaseURL
+      }
+      {
+        name: 'qTestToken'
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qTestTokenSecret'
+      }
+    ]
   }
   dependsOn: [
     keyvault_Module
@@ -209,14 +242,48 @@ module functionapp_sounak_eventlistner_config_module 'modules/functionapp-config
   params: {
     funcappname: SounakEventListnerFuncAppName
     serverfarmid: functionappplan_module.outputs.appServicePlanId
-    instrumentkey: appInsights_Module.outputs.appInsightsInstrumentationKey
-    storageaccountconnString: storage_Module.outputs.storageAccountConnectionString
-    storageAccountKey: storage_Module.outputs.storageAccountKey
-    keyVaultName: keyVaultName
-    eventHubConnectionString: eventHubConnectionString
-    eventHubName: eventHubName
-    cosmosEndpoint: cosmosEndpoint
-    additionalAppSettings: functionAppListenerAdditionalSettings
+    appSettings: [
+      {
+        name: 'AzureWebJobsStorage'
+        value: storage_Module.outputs.storageAccountConnectionString
+      }
+      {
+        name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
+        value: storage_Module.outputs.storageAccountConnectionString
+      }
+      {
+        name: 'STORAGE_ACCOUNT_ACCESS_KEY'
+        value: storage_Module.outputs.storageAccountKey
+      }
+      {
+        name: 'WEBSITE_CONTENTSHARE'
+        value: toLower(SounakEventListnerFuncAppName)
+      }
+      {
+        name: 'FUNCTIONS_EXTENSION_VERSION'
+        value: '~4'
+      }
+      {
+        name: 'FUNCTIONS_WORKER_RUNTIME'
+        value: 'dotnet-isolated'
+      }
+      {
+        name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+        value: appInsights_Module.outputs.appInsightsInstrumentationKey
+      }
+      {
+        name: 'eventHubConnectionString'
+        value: eventHubConnectionString
+      }
+      {
+        name: 'eventHubName'
+        value: eventHubName
+      }
+      {
+        name: 'CosmosEndpoint'
+        value: cosmosEndpoint
+      }
+    ]
   }
 }
 
@@ -236,22 +303,40 @@ module functionapp_saheb_config_module 'modules/functionapp-config.bicep' = {
   params: {
     funcappname: SahebFuncAppName
     serverfarmid: functionappplan_module.outputs.appServicePlanId
-    instrumentkey: appInsights_Module.outputs.appInsightsInstrumentationKey
-    storageaccountconnString: storage_Module.outputs.storageAccountConnectionString
-    storageAccountKey: storage_Module.outputs.storageAccountKey
-    keyVaultName: keyVaultName
-    eventHubConnectionString: eventHubConnectionString
-    eventHubName: eventHubName
-    cosmosEndpoint: cosmosEndpoint
-    additionalAppSettings: concat(
-      functionAppAdditionalSettings,
-      [
-        {
-          name: 'qtestBaseUrl'
-          value: qTestBaseURL
-        }
-      ]
-    )
+    appSettings: [
+      {
+        name: 'AzureWebJobsStorage'
+        value: storage_Module.outputs.storageAccountConnectionString
+      }
+      {
+        name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
+        value: storage_Module.outputs.storageAccountConnectionString
+      }
+      {
+        name: 'STORAGE_ACCOUNT_ACCESS_KEY'
+        value: storage_Module.outputs.storageAccountKey
+      }
+      {
+        name: 'WEBSITE_CONTENTSHARE'
+        value: toLower(SahebFuncAppName)
+      }
+      {
+        name: 'FUNCTIONS_EXTENSION_VERSION'
+        value: '~4'
+      }
+      {
+        name: 'FUNCTIONS_WORKER_RUNTIME'
+        value: 'dotnet-isolated'
+      }
+      {
+        name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+        value: appInsights_Module.outputs.appInsightsInstrumentationKey
+      }
+      {
+        name: 'qTestToken'
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qTestTokenSecret'
+      }
+    ]
   }
   dependsOn: [
     keyvault_Module
@@ -301,6 +386,22 @@ module webApp_uatnextv2 'modules/appservice.bicep' = {
       {
         name: 'ASPNETCORE_ENVIRONMENT'
         value: 'dev'
+      }
+      {
+        name: 'cosmosEndpoint'
+        value: cosmosEndpoint
+      }
+      {
+        name: 'cosmosKey'
+        value: cosmosKey
+      }
+      {
+        name: 'cosmosDatabaseName'
+        value: cosmosDatabaseName
+      }
+      {
+        name: 'cosmosContainerName'
+        value: cosmosContainerName
       }
       {
         name: 'DiagnosticServices_EXTENSION_VERSION'
