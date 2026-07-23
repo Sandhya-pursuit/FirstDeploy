@@ -16,6 +16,13 @@ if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHT
         .UseAzureMonitorExporter();
 }
 
+//Validate the connections trings for EventHub and CosmosDB
+Console.WriteLine( Environment.GetEnvironmentVariable("eventHubName"));
+
+Console.WriteLine( Environment.GetEnvironmentVariable("CosmosEndpoint"));
+
+Console.WriteLine( Environment.GetEnvironmentVariable("eventHubConnectionString"));
+
 builder.Services.AddSingleton(_ =>
 {
     var connectionString = Environment.GetEnvironmentVariable("CosmosEndpoint");

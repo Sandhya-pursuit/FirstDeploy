@@ -20,7 +20,7 @@ public class sounak_eventhub_listner
     }
 
     [Function(nameof(sounak_eventhub_listner))]
-    public async Task Run([ EventHubTrigger( "%eventHubName%", Connection = "eventHubConnectionString")] EventData[] events)
+    public async Task Run([ EventHubTrigger( "%eventHubName%", Connection = "eventHubConnectionString", ConsumerGroup = "consumergroup-autodilab")] EventData[] events)
     {
         _logger.LogInformation("Event Hub Trigger Fired. Received {count} events.", events.Length);
 
@@ -52,7 +52,7 @@ public class sounak_eventhub_listner
                 {
                     id = Guid.NewGuid().ToString(),   // Cosmos requires an id
                     order = data.order,
-                    qtest_id = data.qtest_id,
+                    qtest_id = data.qtest_id.ToString(),
                     qtest_pid = data.qtest_pid,
                     name = data.name,
                     description = data.description,
