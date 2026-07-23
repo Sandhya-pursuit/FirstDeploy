@@ -71,6 +71,8 @@ public class sounak_eventhub_listner
                     agentids = data.agentids,
                     teststeps = data.teststeps
                 };
+                // Generated document converted intot he json string and logged for debugging purposes
+                _logger.LogInformation( "Generated document: {doc}", JsonSerializer.Serialize(document));
 
                 await container.CreateItemAsync( document, new PartitionKey(data.qtest_id));
 
