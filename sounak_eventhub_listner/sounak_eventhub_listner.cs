@@ -3,75 +3,94 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using sounak_eventhub_listner.Models;
-using System;
 using System.Text;
 using System.Text.Json;
-using static Azure.Core.HttpHeader;
 
 namespace sounak_eventhub_listner;
+
 public class sounak_eventhub_listner
 {
     private readonly ILogger<sounak_eventhub_listner> _logger;
     private readonly CosmosClient _cosmosClient;
 
-    public sounak_eventhub_listner(ILogger<sounak_eventhub_listner> logger, CosmosClient cosmosClient)
+    public sounak_eventhub_listner( ILogger<sounak_eventhub_listner> logger, CosmosClient cosmosClient)
     {
         _logger = logger;
         _cosmosClient = cosmosClient;
-
-        // Cosmos DB Connection string
-        var cosmosConnectionString = Environment.GetEnvironmentVariable("CosmosEndpoint");
-        //Create new client of cosmos DB
-        _cosmosClient = new CosmosClient(cosmosConnectionString);
     }
 
     [Function(nameof(sounak_eventhub_listner))]
-    public async Task Run([EventHubTrigger("eventHubName", Connection = "eventHubConnectionString")] EventData[] events)
+    public async Task Run([ EventHubTrigger( "eventHubName", Connection = "eventHubConnectionString")] EventData[] events)
     {
-        //Getting the container detais of that cosmos DB
-        var cosmosContainer = _cosmosClient.GetContainer("db-qTest", "ct-testcase");
+        _logger.LogInformation("Event Hub Trigger Fired. Received {count} events.", events.Length);
 
-        //To avoide case sensetive issues
+        var container = _cosmosClient.GetContainer("db-qTest", "ct-testcase");
+
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         };
 
-        foreach (EventData @event in events)
+        foreach (var eventData in events)
         {
-            //Get the raw JSON string
-            string messageBody = Encoding.UTF8.GetString(@event.Body.ToArray());
-            _logger.LogInformation("Raw JSON string: {body}", messageBody);
-
             try
             {
-                //Convert (Deserialize) the string into your C# object
-                Testcase? data = JsonSerializer.Deserialize<Testcase>(messageBody);
+                string messageBody = Encoding.UTF8.GetString(eventData.Body.ToArray());
 
-                //Check if the data is ull or it has actual data
+                _logger.LogInformation("Received Event: {body}", messageBody);
+
+                Testcase? data = JsonSerializer.Deserialize<Testcase>(messageBody, options);
+
                 if (data == null)
                 {
-                    _logger.LogWarning("Deserialized object is null. Skipping event.");
+                    _logger.LogWarning("Deserialized object is null.");
                     continue;
                 }
 
-                Console.WriteLine($"Data Id : {data.qtest_id}, Testcase Id : {data.qtest_id}, Testcase Pid : {data.qtest_pid}, Testcase Description : {data.description}");
+                // Create a Cosmos document without changing your model
+                var document = new
+                {
+                    id = Guid.NewGuid().ToString(),   // Cosmos requires an id
+                    order = data.order,
+                    qtest_id = data.qtest_id,
+                    qtest_pid = data.qtest_pid,
+                    name = data.name,
+                    description = data.description,
+                    precondition = data.precondition,
+                    links = data.links,
+                    createddate = data.createddate,
+                    lastmodifieddate = data.lastmodifieddate,
+                    properties = data.properties,
+                    weburl = data.weburl,
+                    parentid = data.parentid,
+                    testcaseversionid = data.testcaseversionid,
+                    version = data.version,
+                    aigenerated = data.aigenerated,
+                    aigeneratedsource = data.aigeneratedsource,
+                    creatorid = data.creatorid,
+                    agentids = data.agentids,
+                    teststeps = data.teststeps
+                };
 
-                //Store the data into cosmos DB
-                await cosmosContainer.CreateItemAsync(data, new PartitionKey(data.qtest_id));
+                await container.CreateItemAsync( document, new PartitionKey(data.qtest_id));
+
+                _logger.LogInformation( "Document inserted successfully.");
             }
-
-            //To catch JSON related issues
             catch (JsonException ex)
             {
-                //If someone sends bad JSON that doesn't match your class, it will log an error instead of crashing
-                _logger.LogError("Failed to parse JSON. Error: {errorMessage}", ex.Message);
+                _logger.LogError(ex, "JSON parsing failed.");
             }
-
-            //To catch cosmosDB related issues
             catch (CosmosException ex)
             {
-                _logger.LogError("Cosmos DB error: {errorMessage}", ex.Message);
+                _logger.LogError(
+                    ex,
+                    "Cosmos DB Error. StatusCode={StatusCode}, Message={Message}",
+                    ex.StatusCode,
+                    ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred.");
             }
         }
     }

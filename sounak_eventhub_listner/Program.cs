@@ -5,6 +5,7 @@ using Microsoft.Azure.Functions.Worker.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry;
+using Microsoft.Azure.Cosmos;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -16,5 +17,13 @@ if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHT
         .UseFunctionsWorkerDefaults()
         .UseAzureMonitorExporter();
 }
+
+builder.Services.AddSingleton(s =>
+{
+    var connectionString =
+        Environment.GetEnvironmentVariable("CosmosConnectionString");
+
+    return new CosmosClient(connectionString);
+});
 
 builder.Build().Run();
