@@ -20,10 +20,10 @@ namespace sounak_cosmos_api.Data
         public cosmosDBcontext(IConfiguration configuration)
         {
             // Get the cosmos DB configuration settings from appsettings.json
-            var endpoint = configuration["CosmosDb:EndpointUri"];
-            var key = configuration["CosmosDb:PrimaryKey"];
-            var databaseName = configuration["CosmosDb:DatabaseName"];
-            var containerName = configuration["CosmosDb:ContainerName"];
+            var endpoint = configuration["cosmosEndpoint"];
+            var key = configuration["cosmosKey"];
+            var databaseName = configuration["cosmosDatabaseName"];
+            var containerName = configuration["cosmosContainerName"];
 
             // Create a new client for the cosmos DB account
             Client = new CosmosClient(endpoint, key);
