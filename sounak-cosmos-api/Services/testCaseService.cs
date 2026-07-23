@@ -34,7 +34,7 @@ namespace sounak_cosmos_api.Services
         public async Task<TestCase?> GetByIdAsync(string testcase_pid)
         {
             var queryDefinition = new QueryDefinition(
-                "SELECT * FROM c WHERE c.testcase_pid = @testcase_pid")
+                "SELECT * FROM c WHERE c.qtest_pid = @testcase_pid")
                 .WithParameter("@testcase_pid", testcase_pid);
 
             var query = _container.GetItemQueryIterator<TestCase>(queryDefinition);
