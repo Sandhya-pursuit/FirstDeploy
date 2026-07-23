@@ -217,7 +217,7 @@ module functionapp_sounak_updatetestcase_config_module 'modules/functionapp-conf
       }
       {
         name: 'qTestToken'
-        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qTestTokenSecret'
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qtesttoken'
       }
     ]
   }
@@ -334,7 +334,7 @@ module functionapp_saheb_config_module 'modules/functionapp-config.bicep' = {
       }
       {
         name: 'qTestToken'
-        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qTestTokenSecret'
+        value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=qtesttoken'
       }
     ]
   }
