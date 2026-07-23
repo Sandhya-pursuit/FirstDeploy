@@ -99,6 +99,13 @@ public class update_testcase
             // Log the internal_filteredPayload before json serializer
             _logger.LogInformation($"Before internal_filteredPayload json serializer: {internal_filteredPayload}");
 
+            // Check if the deserialize response is null or not
+            if (internal_filteredPayload == null)
+            {
+                _logger.LogError("Failed to deserialize payload.");
+                return new BadRequestObjectResult("Payload deserialization failed.");
+            }
+
             // Map the internal model with the response model
             var response = testcase_mapper.Map(internal_filteredPayload);
 
@@ -197,6 +204,12 @@ public class update_testcase
 
         // Update Properties Array
         var properties = jsonObj["properties"]?.AsArray();
+
+        if(properties == null)
+        {
+            _logger.LogWarning("Properties array is null.");
+            return;
+        }
 
         // Remove properties with empty values
         // We use ToList() to materialize the query so we can modify the original collection safely

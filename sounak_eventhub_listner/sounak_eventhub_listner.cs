@@ -20,7 +20,7 @@ public class sounak_eventhub_listner
     }
 
     [Function(nameof(sounak_eventhub_listner))]
-    public async Task Run([ EventHubTrigger( "eventHubName", Connection = "eventHubConnectionString")] EventData[] events)
+    public async Task Run([ EventHubTrigger( "%eventHubName%", Connection = "eventHubConnectionString")] EventData[] events)
     {
         _logger.LogInformation("Event Hub Trigger Fired. Received {count} events.", events.Length);
 
