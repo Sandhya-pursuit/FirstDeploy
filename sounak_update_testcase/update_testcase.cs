@@ -59,7 +59,7 @@ public class update_testcase
         if (string.IsNullOrEmpty(eventHubConnectionString) || string.IsNullOrEmpty(eventHubName))
         {
             _logger.LogError("Missing event hub configuration details (connection string or name).");
-            return new ObjectResult("Server configuration error: Missing eventhub configurationd etails") { StatusCode = 401 };
+            return new ObjectResult("Server configuration error: Missing eventhub configuration details") { StatusCode = 401 };
         }
 
         //create a eventhub producer client
