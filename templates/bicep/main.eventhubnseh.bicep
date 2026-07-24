@@ -1,4 +1,3 @@
-
 param eventHubNamespaceName string
 param EHNskuTier string
 param EHNskuCapacity int
@@ -27,8 +26,8 @@ module eventHubModule 'modules/eventhub-namespace.bicep' = {
     EHNskuCapacity: EHNskuCapacity
     location: location
     consumerGroupName: consumerGroupName
-    functionAppPrincipalId: FunctionApp.identity.principalId
-    functionAppListenerPrincipalId: functionAppListener.identity.principalId
+    dataSenderfunctionAppPrincipalId: FunctionApp.identity.principalId
+    dataReceiverfunctionAppPrincipalId: functionAppListener.identity.principalId
   }
 }
 

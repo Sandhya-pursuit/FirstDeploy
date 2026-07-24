@@ -21,7 +21,7 @@ if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_
 // Register CosmosClient using Managed Identity
 builder.Services.AddSingleton<CosmosClient>(_ =>
     new CosmosClient(
-        builder.Configuration["cosmosEndpoint"]!,
+        builder.Configuration["cosmosEndpoint"]!, 
         new DefaultAzureCredential()));
 
 builder.Build().Run();

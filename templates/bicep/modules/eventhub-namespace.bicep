@@ -4,8 +4,8 @@ param eventhubname string
 param EHNskuTier string
 param EHNskuCapacity int
 param consumerGroupName string
-param functionAppPrincipalId string
-param functionAppListenerPrincipalId string
+param dataSenderfunctionAppPrincipalId string
+param dataReceiverfunctionAppPrincipalId string
 
 resource eventHubNamespace 'Microsoft.EventHub/namespaces@2023-01-01-preview' = {
   name: eventHubNamespaceName
@@ -31,27 +31,27 @@ resource consumerGroup 'Microsoft.EventHub/namespaces/eventhubs/consumergroups@2
   properties: {}
 }
 
-resource eventHubRoleMain 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(eventHubNamespace.id, functionAppPrincipalId, 'eventhub-role-main')
+resource eventHubRoleSender 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(eventHubNamespace.id, dataSenderfunctionAppPrincipalId, 'eventhub-role-sender')
   scope: eventHubNamespace
   properties: {
     roleDefinitionId: subscriptionResourceId(
       'Microsoft.Authorization/roleDefinitions',
       '2b629674-e913-4c01-ae53-ef4638d8f975'
     )
-    principalId: functionAppPrincipalId
+    principalId: dataSenderfunctionAppPrincipalId
   }
 }
 
-resource eventHubRoleListener 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(eventHubNamespace.id, functionAppListenerPrincipalId, 'eventhub-role-listener')
+resource eventHubRoleReceiver 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(eventHubNamespace.id, dataReceiverfunctionAppPrincipalId, 'eventhub-role-receiver')
   scope: eventHubNamespace
   properties: {
     roleDefinitionId: subscriptionResourceId(
       'Microsoft.Authorization/roleDefinitions',
-      '2b629674-e913-4c01-ae53-ef4638d8f975'
+      'a638d3c7-ab3a-418d-83e6-5f17a39d4fde'
     )
-    principalId: functionAppListenerPrincipalId
+    principalId: dataReceiverfunctionAppPrincipalId
   }
 }
 

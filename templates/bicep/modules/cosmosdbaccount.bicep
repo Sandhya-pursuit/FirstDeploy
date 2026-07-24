@@ -1,7 +1,7 @@
 param cosmosDbAccountName string
 param location string
-param functionAppListenerPrincipalId string
-param webapiPrincipalId string
+param dataSenderfunctionAppPrincipalId string
+param dataReceiverwebapiPrincipalId string
 
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
   name: cosmosDbAccountName
@@ -24,27 +24,23 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
   }
 }
 
-resource cosmosRoleListener 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(cosmosDbAccount.id, functionAppListenerPrincipalId, 'cosmos-role-listener')
-  scope: cosmosDbAccount
+resource functionAppRoleAssignment 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2023-04-15' = {
+  name: guid(cosmosDbAccount.id, dataSenderfunctionAppPrincipalId, 'data-contributor')
+  parent: cosmosDbAccount
   properties: {
-    roleDefinitionId: subscriptionResourceId(
-      'Microsoft.Authorization/roleDefinitions',
-      '5bd9cd88-fe45-4216-938b-f97437e15450'
-    )
-    principalId: functionAppListenerPrincipalId
+    principalId: dataSenderfunctionAppPrincipalId
+    roleDefinitionId: '${cosmosDbAccount.id}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002'
+    scope: cosmosDbAccount.id
   }
 }
 
-resource cosmosRoleWebApi 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(cosmosDbAccount.id, webapiPrincipalId, 'cosmos-role-webapi')
-  scope: cosmosDbAccount
+resource webApiRoleAssignment 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2023-04-15' = {
+  name: guid(cosmosDbAccount.id, dataReceiverwebapiPrincipalId, 'data-reader')
+  parent: cosmosDbAccount
   properties: {
-    roleDefinitionId: subscriptionResourceId(
-      'Microsoft.Authorization/roleDefinitions',
-      '5bd9cd88-fe45-4216-938b-f97437e15450'
-    )
-    principalId: webapiPrincipalId
+    principalId: dataReceiverwebapiPrincipalId
+    roleDefinitionId: '${cosmosDbAccount.id}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000001'
+    scope: cosmosDbAccount.id
   }
 }
 

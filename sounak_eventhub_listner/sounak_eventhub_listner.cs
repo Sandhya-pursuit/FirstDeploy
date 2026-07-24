@@ -96,5 +96,5 @@ public class sounak_eventhub_listner
                 _logger.LogError(ex, "Unexpected error occurred.");
             }
         }
-    }
+       }
 }
