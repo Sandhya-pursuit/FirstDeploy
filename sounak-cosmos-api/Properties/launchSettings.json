@@ -9,8 +9,7 @@
       "applicationUrl": "http://localhost:5272",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "cosmosEndpoint": "",
-        "cosmosKey": "",
+        "cosmosEndpoint": "https://cosmosdb-ps-dev-autodilab.documents.azure.com:443/",
         "cosmosDatabaseName": "db-qTest",
         "cosmosContainerName": "ct-testcase"
       }

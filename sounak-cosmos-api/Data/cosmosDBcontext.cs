@@ -1,6 +1,4 @@
 ﻿using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Core;
-using System.Configuration;
 
 namespace sounak_cosmos_api.Data
 {
@@ -17,16 +15,14 @@ namespace sounak_cosmos_api.Data
          * Azure App Configuration
          * Key Vault
          */
-        public cosmosDBcontext(IConfiguration configuration)
+        public cosmosDBcontext( CosmosClient cosmosClient, IConfiguration configuration)
         {
-            // Get the cosmos DB configuration settings from appsettings.json
-            var endpoint = configuration["cosmosEndpoint"];
-            var key = configuration["cosmosKey"];
+            // Get the cosmos DB configuration settings from appsettings.json / launchSettings.json / environment variables
             var databaseName = configuration["cosmosDatabaseName"];
             var containerName = configuration["cosmosContainerName"];
 
             // Create a new client for the cosmos DB account
-            Client = new CosmosClient(endpoint, key);
+            Client = cosmosClient;
 
             // Fetch the DB reference
             Database = Client.GetDatabase(databaseName);
