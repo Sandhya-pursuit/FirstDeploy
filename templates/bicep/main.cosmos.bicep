@@ -1,24 +1,24 @@
 param cosmosDbAccountName string
 param location string
-param functionAppName string
 param functionAppListenerName string
-
-resource FunctionApp 'Microsoft.Web/sites@2023-01-01' existing = {
-  name: functionAppName
-}
+param webAPIName string
 
 resource functionAppListener 'Microsoft.Web/sites@2023-01-01' existing = {
   name: functionAppListenerName
 }
+
+resource webAPI 'Microsoft.Web/sites@2023-01-01' existing = {
+  name: webAPIName
+}
+
 module cosmosDbAccount 'modules/cosmosdbaccount.bicep' = {
   name: 'cosmosDbAccountModule'
   params: {
     cosmosDbAccountName: cosmosDbAccountName
     location: location
-    functionAppPrincipalId: FunctionApp.identity.principalId
+    webapiPrincipalId: webAPI.identity.principalId
     functionAppListenerPrincipalId: functionAppListener.identity.principalId
   }
 }
 
 output cosmosDbEndpoint string = cosmosDbAccount.outputs.cosmosEndpoint
-

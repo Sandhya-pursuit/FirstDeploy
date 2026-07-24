@@ -62,6 +62,6 @@ resource appService_webApp 'Microsoft.Web/sites@2024-04-01' = {
 }
 
 output webAppUrl1 string = appService_webApp.properties.defaultHostName
-output appService_managedIdentity string = appService_webApp.identity.principalId
+output appServiceIdentity string = appService_webApp.identity.principalId
 
 output webAppUrl string = 'https://${webAppName}.azurewebsites.net'
