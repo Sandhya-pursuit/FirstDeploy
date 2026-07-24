@@ -35,7 +35,7 @@ builder.Services
 // Register Event Hub Producer using Managed Identity
 builder.Services.AddSingleton<EventHubProducerClient>(_ =>
     new EventHubProducerClient(
-        builder.Configuration["eventHubNamespace"]!,
+        builder.Configuration["eventHubNamespaceEndpoint"]!,
         builder.Configuration["eventHubName"]!,
         new DefaultAzureCredential()));
 

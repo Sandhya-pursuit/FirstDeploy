@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker.Builder;
@@ -9,24 +10,18 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
+// Application Insights
+if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
 {
     builder.Services.AddOpenTelemetry()
         .UseFunctionsWorkerDefaults()
         .UseAzureMonitorExporter();
 }
 
-//Validate the connections trings for EventHub and CosmosDB
-Console.WriteLine( Environment.GetEnvironmentVariable("eventHubName"));
-
-Console.WriteLine( Environment.GetEnvironmentVariable("CosmosEndpoint"));
-
-Console.WriteLine( Environment.GetEnvironmentVariable("eventHubConnectionString"));
-
-builder.Services.AddSingleton(_ =>
-{
-    var connectionString = Environment.GetEnvironmentVariable("CosmosEndpoint");
-    return new CosmosClient(connectionString);
-});
+// Register CosmosClient using Managed Identity
+builder.Services.AddSingleton<CosmosClient>(_ =>
+    new CosmosClient(
+        builder.Configuration["cosmosEndpoint"]!,
+        new DefaultAzureCredential()));
 
 builder.Build().Run();

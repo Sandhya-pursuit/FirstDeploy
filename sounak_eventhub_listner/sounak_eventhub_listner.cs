@@ -20,7 +20,7 @@ public class sounak_eventhub_listner
     }
 
     [Function(nameof(sounak_eventhub_listner))]
-    public async Task Run([ EventHubTrigger( "%eventHubName%", Connection = "eventHubConnectionString", ConsumerGroup = "consumergoup-autodilab")] EventData[] events)
+    public async Task Run([ EventHubTrigger( "%eventHubName%", Connection = "eventHubConnectionString", ConsumerGroup = "consumergoup-autodilab")] EventData[] events, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Event Hub Trigger Fired. Received {count} events.", events.Length);
 
@@ -35,7 +35,7 @@ public class sounak_eventhub_listner
         {
             try
             {
-                string messageBody = Encoding.UTF8.GetString(eventData.Body.ToArray());
+                string messageBody = Encoding.UTF8.GetString(eventData.EventBody.ToArray());
 
                 _logger.LogInformation("Received Event: {body}", messageBody);
 
@@ -71,10 +71,11 @@ public class sounak_eventhub_listner
                     agentids = data.agentids,
                     teststeps = data.teststeps
                 };
+                
                 // Generated document converted into the json string and logged the id and qtest_id for debugging purposes
                 _logger.LogInformation( "Cosmos Insert - id: {id}, qtest_id: {qtest_id}", document.id, document.qtest_id);
 
-                await container.CreateItemAsync( document, new PartitionKey(data.qtest_id.ToString()));
+                await container.CreateItemAsync( document, new PartitionKey(data.qtest_id.ToString()), cancellationToken: cancellationToken);
 
                 _logger.LogInformation( "Document inserted successfully.");
             }
