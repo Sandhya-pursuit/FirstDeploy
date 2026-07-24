@@ -6,7 +6,7 @@ param logAnalyticsName = 'logan-ps-dev-autodilab'
 
 param appInsightsName = 'appins-ps-dev-autodilab'
 
-param keyVaultName = 'kv-ps-dev-autodilab'
+param keyVaultName = 'kv-ps-dev-autodilab-a'
 param qTestTokenSecret = ''
 
 param SandyaObjectId = '77c5b611-eedd-4ba6-ad1f-3fe14fdffea3'
