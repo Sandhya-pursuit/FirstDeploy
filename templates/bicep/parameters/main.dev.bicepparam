@@ -41,11 +41,12 @@ param SounakAppServiceName = 'webapp-ps-dev-sounak-cosmosdb-webapi'
 param dotnetVersion = 'DOTNETCORE|10.0'
 param logOutUrl = 'https://login.microsoftonline.com/b16b5078-3c36-482e-b98e-b986822e8f7f/oauth2/v2.0/logout'
 
-param cosmosEndpoint =  ''
+param cosmosEndpoint =  'https://cosmosdb-ps-dev-autodilab.documents.azure.com:443/'
 param cosmosKey =  ''
 param cosmosDatabaseName =  'db-qTest'
 param cosmosContainerName =  'ct-testcase'
 
 
 param eventHubConnectionString = ''
+param eventHubNamespaceEndpoint = 'ehns-ps-autodilab.servicebus.windows.net'
 param eventHubName =  'eh-ps-autodilab'

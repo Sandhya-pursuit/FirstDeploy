@@ -56,6 +56,9 @@ param qTestBaseURL string
 @description('Event Hub connection string.')
 param eventHubConnectionString string
 
+@description('Event Hub namespace endpoint.')
+param eventHubNamespaceEndpoint string
+
 @description('Event Hub name.')
 param eventHubName string
 
@@ -204,8 +207,8 @@ module functionapp_sounak_updatetestcase_config_module 'modules/functionapp-conf
         value: appInsights_Module.outputs.appInsightsInstrumentationKey
       }
       {
-        name: 'eventHubConnectionString'
-        value: eventHubConnectionString
+        name: 'eventHubNamespaceEndpoint'
+        value: eventHubNamespaceEndpoint
       }
       {
         name: 'eventHubName'
