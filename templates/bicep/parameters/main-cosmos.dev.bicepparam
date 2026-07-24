@@ -6,4 +6,4 @@ param location = 'eastus'
 
 param functionAppListenerName = 'funcapp-ps-dev-sounak-eventlistner'
 
-param functionAppName = 'funcapp-ps-dev-sounak-updatetestcase'
+param webAPIName = 'webapp-ps-dev-sounak-cosmosdb-webapi'
