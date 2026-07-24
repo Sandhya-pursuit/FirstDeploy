@@ -7,6 +7,5 @@ param consumerGroupName = 'ConsumerGoup-autodilab'
 param eventHubName = 'eh-ps-autodilab'
 param location = 'eastus'
 
-param functionAppListenerName = 'funcapp-ps-dev-sounak-eventlistner'
-
-param functionAppName = 'funcapp-ps-dev-sounak-updatetestcase'
+param datasenderfunctionappname = 'funcapp-ps-dev-sounak-updatetestcase'
+param datareceiverfunctionappname = 'funcapp-ps-dev-sounak-eventlistner'
