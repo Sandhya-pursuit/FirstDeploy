@@ -1,14 +1,14 @@
 param cosmosDbAccountName string
 param location string
-param functionAppListenerName string
-param webAPIName string
+param datasenderfunctionappname string
+param datareceiverwebapiname string
 
-resource functionAppListener 'Microsoft.Web/sites@2023-01-01' existing = {
-  name: functionAppListenerName
+resource dataSenderfunctionapp 'Microsoft.Web/sites@2023-01-01' existing = {
+  name: datasenderfunctionappname
 }
 
-resource webAPI 'Microsoft.Web/sites@2023-01-01' existing = {
-  name: webAPIName
+resource datareceiverwebapi 'Microsoft.Web/sites@2023-01-01' existing = {
+  name: datareceiverwebapiname
 }
 
 module cosmosDbAccount 'modules/cosmosdbaccount.bicep' = {
@@ -16,8 +16,8 @@ module cosmosDbAccount 'modules/cosmosdbaccount.bicep' = {
   params: {
     cosmosDbAccountName: cosmosDbAccountName
     location: location
-    webapiPrincipalId: webAPI.identity.principalId
-    functionAppListenerPrincipalId: functionAppListener.identity.principalId
+    dataSenderfunctionAppPrincipalId: dataSenderfunctionapp.identity.principalId
+    dataReceiverwebapiPrincipalId: datareceiverwebapi.identity.principalId 
   }
 }
 

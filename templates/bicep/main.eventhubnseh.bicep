@@ -5,16 +5,17 @@ param eventHubName string
 param consumerGroupName string
 param location string
 
-param functionAppName string
-param functionAppListenerName string
+param datasenderfunctionappname string
+param datareceiverfunctionappname string
 
 
-resource FunctionApp 'Microsoft.Web/sites@2023-01-01' existing = {
-  name: functionAppName
+resource datasenderfunctionapp 'Microsoft.Web/sites@2023-01-01' existing = {
+  name: datasenderfunctionappname
+
 }
 
-resource functionAppListener 'Microsoft.Web/sites@2023-01-01' existing = {
-  name: functionAppListenerName
+resource datareceiverfunctionapp 'Microsoft.Web/sites@2023-01-01' existing = {
+  name: datareceiverfunctionappname
 }
 
 module eventHubModule 'modules/eventhub-namespace.bicep' = {
@@ -26,8 +27,8 @@ module eventHubModule 'modules/eventhub-namespace.bicep' = {
     EHNskuCapacity: EHNskuCapacity
     location: location
     consumerGroupName: consumerGroupName
-    dataSenderfunctionAppPrincipalId: FunctionApp.identity.principalId
-    dataReceiverfunctionAppPrincipalId: functionAppListener.identity.principalId
+    dataSenderfunctionAppPrincipalId: datasenderfunctionapp.identity.principalId
+    dataReceiverfunctionAppPrincipalId: datareceiverfunctionapp.identity.principalId
   }
 }
 
