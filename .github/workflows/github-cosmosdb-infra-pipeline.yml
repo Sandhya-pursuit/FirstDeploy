@@ -54,7 +54,7 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --template-file ${{ env.BICEP_FILE }} \
             --parameters ${{ env.BICEP_PARAM_FILE }} \
-            --mode Complete \
+            --mode Incremental \
             --query properties.outputs \
             -o json)
 
