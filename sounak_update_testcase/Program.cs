@@ -1,3 +1,5 @@
+using Azure.Identity;
+using Azure.Messaging.EventHubs.Producer;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,27 +11,32 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-// Define the Retry Policy (The Bodyguard's Rules)
-// "If we get a network error or a 5xx/408 status code..."
+// Retry Policy
 var retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
-    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-// ^ Exponential Backoff: Wait 2s, then 4s, then 8s.
+    .WaitAndRetryAsync(
+        3,
+        retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-// 2. Define the Circuit Breaker Policy 👇 NEW
+// Circuit Breaker Policy
 var circuitBreakerPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
     .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
-// ^ "Stop! If 5 failures happen, pause for 30 seconds."
 
 builder.Services
     .AddMemoryCache()
     .AddHttpClient("qTestClient", client =>
     {
-        //set the timeout duration
         client.Timeout = TimeSpan.FromSeconds(30);
     })
     .AddPolicyHandler(retryPolicy)
     .AddPolicyHandler(circuitBreakerPolicy);
+
+// Register Event Hub Producer using Managed Identity
+builder.Services.AddSingleton<EventHubProducerClient>(_ =>
+    new EventHubProducerClient(
+        builder.Configuration["eventHubNamespace"]!,
+        builder.Configuration["eventHubName"]!,
+        new DefaultAzureCredential()));
 
 builder.Build().Run();

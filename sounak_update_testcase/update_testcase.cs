@@ -19,6 +19,8 @@ public class update_testcase
 {
     private readonly ILogger<update_testcase> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly EventHubProducerClient _eventHubProducerClient;
+
     private const string UpdatedMessage = "Updated By Sounak Sen using c# function app";
 
     // Specific fields that qTest prevents you from updating via PUT
@@ -28,10 +30,11 @@ public class update_testcase
         "creator_id", "agent_ids"
     };
 
-    public update_testcase(ILogger<update_testcase> logger, IHttpClientFactory httpClientFactory)
+    public update_testcase(ILogger<update_testcase> logger, IHttpClientFactory httpClientFactory, EventHubProducerClient eventHubProducerClient)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
+        _eventHubProducerClient = eventHubProducerClient;
     }
 
     [Function("update_testcase")]
@@ -51,19 +54,6 @@ public class update_testcase
             _logger.LogError("Missing qTest configuration (URL or Token).");
             return new ObjectResult("Server configuration error: Missing qTest credentials") { StatusCode = 401 };
         }
-
-        // EventHub Details
-        var eventHubConnectionString = Environment.GetEnvironmentVariable("eventHubConnectionString");
-        var eventHubName = Environment.GetEnvironmentVariable("eventHubName");
-
-        if (string.IsNullOrEmpty(eventHubConnectionString) || string.IsNullOrEmpty(eventHubName))
-        {
-            _logger.LogError("Missing event hub configuration details (connection string or name).");
-            return new ObjectResult("Server configuration error: Missing eventhub configuration details") { StatusCode = 401 };
-        }
-
-        //create a eventhub producer client
-        var eventHubproducerClient = new EventHubProducerClient(eventHubConnectionString, eventHubName);
 
         try
         {
@@ -122,13 +112,24 @@ public class update_testcase
             var testcaseEvent = new EventData(jsonStringifyResult);
 
             // Creating event batch
-            var eventBatch = await eventHubproducerClient.CreateBatchAsync();
+            using EventDataBatch eventBatch = await _eventHubProducerClient.CreateBatchAsync(cancellationToken);
 
             // Adding data into the batch
-            eventBatch.TryAdd(testcaseEvent);
+            if (!eventBatch.TryAdd(testcaseEvent))
+            {
+                _logger.LogError("Failed to add event to the Event Hub batch because it exceeds the maximum allowed size.");
+
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+
+            // Data sending to the event hub started
+            _logger.LogInformation("Sending event to Event Hub...");
 
             // Sending the events batch into the event hub
-            await eventHubproducerClient.SendAsync(eventBatch);
+            await _eventHubProducerClient.SendAsync(eventBatch, cancellationToken);
+
+            // Successfully data sent to the event hub
+            _logger.LogInformation("Event successfully sent to Event Hub.");
 
             // Return the json object insteed of the string
             return new OkObjectResult(response);
