@@ -39,10 +39,11 @@ resource appService_webApp 'Microsoft.Web/sites@2024-04-01' = {
     siteConfig: {
       linuxFxVersion: dotnetVersion
       loadBalancing: 'LeastRequests'
-      alwaysOn: false 
+      alwaysOn: true 
       minTlsVersion: '1.2'
       ftpsState: 'FtpsOnly'
       vnetRouteAllEnabled: true
+      healthCheckPath: '/health'
       ipSecurityRestrictionsDefaultAction: 'Deny'
       ipSecurityRestrictions: []
       scmIpSecurityRestrictionsDefaultAction: 'Deny'

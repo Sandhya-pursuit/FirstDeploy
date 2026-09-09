@@ -42,7 +42,6 @@ param dotnetVersion = 'DOTNETCORE|10.0'
 param logOutUrl = 'https://login.microsoftonline.com/b16b5078-3c36-482e-b98e-b986822e8f7f/oauth2/v2.0/logout'
 
 param cosmosEndpoint =  'https://cosmosdb-ps-dev-autodilab.documents.azure.com:443/'
-param cosmosKey =  ''
 param cosmosDatabaseName =  'db-qTest'
 param cosmosContainerName =  'ct-testcase'
 

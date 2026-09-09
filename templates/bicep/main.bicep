@@ -65,9 +65,6 @@ param eventHubName string
 @description('Cosmos DB endpoint.')
 param cosmosEndpoint string
 
-@description('Cosmos DB key.')
-param cosmosKey string
-
 @description('Cosmos DB database name.')
 param cosmosDatabaseName string
 
@@ -393,10 +390,6 @@ module webApp_uatnextv2 'modules/appservice.bicep' = {
       {
         name: 'cosmosEndpoint'
         value: cosmosEndpoint
-      }
-      {
-        name: 'cosmosKey'
-        value: cosmosKey
       }
       {
         name: 'cosmosDatabaseName'
